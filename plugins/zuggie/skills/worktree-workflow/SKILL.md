@@ -39,6 +39,20 @@ Name branches descriptively: feature/auth-refresh, fix/null-check.
 user explicitly asks you to. Leave the branch as-is for the user to
 merge via PR or however they prefer.
 
+### If the user gives permission to merge
+
+    git checkout main        # or master
+    git merge <branch-name>
+    git worktree remove .claude/zuggie/<branch-name>
+    git branch -d <branch-name>
+
+### If the user says the PR has been merged/integrated
+
+No merge needed — just clean up:
+
+    git worktree remove .claude/zuggie/<branch-name>
+    git branch -d <branch-name>
+
 ## If you have uncommitted work on main
 
     git stash
