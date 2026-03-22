@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "If the conversation has arrived at a concrete implementation plan and the user wants to proceed, invoke /zuggie:implement with a clear description of what was agreed. You do not need to wait for the user to type /zuggie:implement themselves. If the conversation has NOT arrived at a concrete plan yet, do nothing — do NOT block the user. Simply allow the message through."
+            "prompt": "If the conversation has arrived at a concrete implementation plan and the user seems ready to proceed, suggest using zuggie to implement it. For example: 'It looks like we have a solid plan — would you like me to run /zuggie:implement to kick off the implementation?' If the conversation has NOT arrived at a concrete plan yet, do nothing — do NOT block the user. Simply allow the message through."
           }
         ]
       }
