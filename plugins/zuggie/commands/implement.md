@@ -8,12 +8,9 @@ conversation has converged on a clear plan.
 Pipeline:
 
 1. Worktree check — if on main or master, create a worktree before
-   doing anything else:
-       git worktree add .claude/zuggie/<branch-name> -b <branch-name>
-       cd .claude/zuggie/<branch-name>
+   doing anything else by running `/zuggie:wt <branch-name>`.
    Pick a descriptive branch name (e.g. feature/auth-refresh,
-   fix/null-check). If there are uncommitted changes, stash and pop
-   them into the new worktree.
+   fix/null-check).
 
 2. Plan — invoke the zuggie-tech-lead agent with:
    - The task description
