@@ -18,8 +18,8 @@ current branch.
 
 ## Creating a worktree
 
-    git worktree add ../<repo>-<branch-name> -b <branch-name>
-    cd ../<repo>-<branch-name>
+    git worktree add .claude/zuggie/<branch-name> -b <branch-name>
+    cd .claude/zuggie/<branch-name>
 
 Name branches descriptively: feature/auth-refresh, fix/null-check.
 
@@ -32,14 +32,16 @@ Name branches descriptively: feature/auth-refresh, fix/null-check.
     # From inside the worktree
     git add -A && git commit -m "..."
 
-    # Back in the main repo
-    cd ../main-repo
-    git merge <branch-name>
-    git worktree remove ../<repo>-<branch-name>
+    # Clean up the worktree (do NOT merge back to main/master)
+    git worktree remove .claude/zuggie/<branch-name>
+
+**Important:** Never merge the branch back into main/master unless the
+user explicitly asks you to. Leave the branch as-is for the user to
+merge via PR or however they prefer.
 
 ## If you have uncommitted work on main
 
     git stash
-    git worktree add ../<repo>-<branch-name> -b <branch-name>
-    cd ../<repo>-<branch-name>
+    git worktree add .claude/zuggie/<branch-name> -b <branch-name>
+    cd .claude/zuggie/<branch-name>
     git stash pop
