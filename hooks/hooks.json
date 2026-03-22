@@ -1,15 +1,25 @@
 {
-  "hooks": [
-    {
-      "event": "UserPromptSubmit",
-      "type": "prompt",
-      "prompt": "If the conversation has arrived at a concrete implementation plan and the user wants to proceed, invoke /zuggie:implement with a clear description of what was agreed. You do not need to wait for the user to type /zuggie:implement themselves."
-    },
-    {
-      "event": "PreToolUse",
-      "matcher": "Write|Edit|MultiEdit",
-      "type": "prompt",
-      "prompt": "Before proceeding with this file edit: if you are on main or master, stop and remind the user to use a worktree. Offer to run /zuggie:wt to create one."
-    }
-  ]
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "If the conversation has arrived at a concrete implementation plan and the user wants to proceed, invoke /zuggie:implement with a clear description of what was agreed. You do not need to wait for the user to type /zuggie:implement themselves."
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Before proceeding with this file edit: if you are on main or master, stop and remind the user to use a worktree. Offer to run /zuggie:wt to create one."
+          }
+        ]
+      }
+    ]
+  }
 }
