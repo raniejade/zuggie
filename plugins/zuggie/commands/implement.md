@@ -15,6 +15,11 @@ Pipeline:
    `cd .claude/zuggie/<branch-name>`
    All subsequent steps must run inside the worktree.
 
+   **CRITICAL: No commits may land on main or master.** Before any
+   commit step, verify with `git branch --show-current` that you are
+   on a feature branch. If you are still on main/master, stop
+   immediately — do not commit.
+
 2. Plan — invoke the zuggie-tech-lead agent with:
    - The task description
    - Any prior conversation context relevant to the plan
@@ -24,6 +29,7 @@ Pipeline:
 
 3. Implement — for each workstream in the plan, invoke a zuggie-engineer agent.
    Pass each zuggie-engineer:
+   - The working directory (the worktree path, e.g. `.claude/zuggie/<branch-name>`)
    - The full plan
    - Its specific workstream
    - The files it will need (read and pass contents)
