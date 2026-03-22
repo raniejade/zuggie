@@ -2,54 +2,47 @@ Run the full planning, implementation, and review pipeline.
 
 Usage: /zuggie:implement <task description>
 
-Can be invoked by the user directly or by the main agent when a
-conversation has converged on a clear plan.
-
 Pipeline:
 
-1. Worktree check — if on main or master, create a worktree before
-   doing anything else by running `/zuggie:wt <branch-name>`.
-   Pick a descriptive branch name (e.g. feature/auth-refresh,
-   fix/null-check).
-   After the worktree is created, cd into it:
-   `cd .claude/zuggie/<branch-name>`
-   All subsequent steps must run inside the worktree.
+1. **Worktree** — if on main or master, run `/zuggie:wt <branch-name>`
+   with a descriptive name (e.g. feature/auth-refresh, fix/null-check).
+   cd into `.claude/zuggie/<branch-name>`. All subsequent steps run
+   inside the worktree.
 
-   **CRITICAL: No commits may land on main or master.** Before any
-   commit step, verify with `git branch --show-current` that you are
-   on a feature branch. If you are still on main/master, stop
-   immediately — do not commit.
+2. **Plan** — invoke zuggie-tech-lead with:
+   - The task description (verbatim)
+   - Any prior conversation context relevant to the task
+   - Current branch name and worktree path
+   Wait for the plan. Verify it includes at least one workstream
+   with file lists and steps.
 
-2. Plan — invoke the zuggie-tech-lead agent with:
-   - The task description
-   - Any prior conversation context relevant to the plan
-   - Contents of relevant files identified so far
-   - Current branch and worktree context
-   Wait for zuggie-tech-lead to return a plan and workstream breakdown.
-
-3. Implement — for each workstream in the plan, invoke a zuggie-engineer agent.
-   Pass each zuggie-engineer:
-   - The working directory (the worktree path, e.g. `.claude/zuggie/<branch-name>`)
-   - The full plan
-   - Its specific workstream
-   - The files it will need (read and pass contents)
-   - The original task description verbatim
-   Spawn zuggie-engineer agents in parallel for independent workstreams.
-   Wait for all to complete before proceeding.
-
-4. Review — invoke the zuggie-reviewer agent with:
+3. **Implement** — for each workstream, invoke a zuggie-engineer with:
+   - Working directory: the worktree path
+   - The full plan (so the engineer has context)
+   - Its specific workstream (title, files, steps)
    - The original task description
-   - The zuggie-tech-lead's plan
-   - A summary of what each zuggie-engineer did
-   - Full output of git diff
+   Launch independent workstreams (dependencies: "none") in parallel.
+   Launch dependent workstreams sequentially after their dependencies
+   complete.
+   If an engineer reports a blocking issue, stop the pipeline and
+   surface it to the user.
 
-5. Triage — for each issue the zuggie-reviewer raised, decide whether to fix
-   it now or defer. Blocking issues should be fixed now. Minor issues
-   and nits are deferred unless trivial to address. Invoke zuggie-engineer
-   agents as needed for fixes, same as step 3.
+4. **Review** — invoke zuggie-reviewer with:
+   - The original task description
+   - The tech-lead's plan
+   - Each engineer's summary
+   - Output of `git diff main...HEAD` (use the actual base branch)
 
-6. Ask the user for feedback. Present:
-   - A short summary of what was implemented
-   - What the reviewer flagged and how you handled it
-   - Any deferred issues with your reasoning
-   Ask if they are happy to proceed or want changes.
+5. **Triage** — read the reviewer's issues:
+   - **Blocking**: invoke zuggie-engineer to fix. Pass the reviewer's
+     issue description as the workstream, plus the relevant files.
+   - **Minor/nit**: defer unless the fix is a one-line change.
+   Only re-review if the reviewer's verdict was "request changes".
+   If verdict was "approve with minor fixes", fixes do not need a
+   second review pass.
+
+6. **Report** — present to the user:
+   - What was implemented (1-3 sentences)
+   - Reviewer verdict and how you handled any issues
+   - Deferred issues with reasoning
+   Ask if they want changes or are happy to proceed.
