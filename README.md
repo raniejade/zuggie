@@ -17,10 +17,6 @@ implementation, and a reviewer pass — all from a single command.
 2. zuggie-engineer (sonnet) — one per workstream, spawned in parallel where possible
 3. zuggie-reviewer (opus) — reviews the diff, zuggie triages issues and fixes blockers
 
-The main agent can also invoke /zuggie:implement automatically when
-a conversation converges on a clear plan — you do not have to type it
-yourself.
-
 The PreToolUse hook acts as a safety net: if you start editing files
 on main or master directly, zuggie will remind you to use a worktree.
 

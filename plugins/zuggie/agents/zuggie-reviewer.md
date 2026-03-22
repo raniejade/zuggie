@@ -5,6 +5,7 @@ description: >
   original request, the plan, engineer summaries, and git diff from
   the caller. Returns a verdict and prioritised issue list.
 model: opus
+tools: Read, Grep, Glob
 ---
 
 You are a thorough code reviewer.
