@@ -26,8 +26,8 @@ on main or master directly, zuggie will remind you to use a worktree.
 
 ## Installation
 
-    /plugin marketplace add your-username/zuggie
-    /plugin install zuggie@your-username
+    /plugin marketplace add raniejade/zuggie
+    /plugin install zuggie@zuggie
 
 ## Customisation
 
@@ -54,6 +54,6 @@ Add to .claude/settings.local.json:
 
     {
       "enabledPlugins": {
-        "zuggie@your-username": false
+        "zuggie@zuggie": false
       }
     }

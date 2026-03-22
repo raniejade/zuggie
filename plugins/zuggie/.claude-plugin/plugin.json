@@ -2,6 +2,7 @@
   "name": "zuggie",
   "version": "1.0.0",
   "description": "Structured development workflow with planning, parallel implementation, and review",
-  "author": { "name": "you" },
+  "author": { "name": "raniejade" },
+  "repository": "https://github.com/raniejade/zuggie",
   "keywords": ["workflow", "agents", "worktree", "planning"]
 }
