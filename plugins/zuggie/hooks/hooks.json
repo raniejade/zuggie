@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '.tool_input.command' | grep -q 'git worktree add' && echo '{\"decision\":\"block\",\"reason\":\"Use /zuggie:wt instead of git worktree add directly.\"}' || true"
+            "command": "jq -r '.tool_input.command' | { read -r cmd; echo \"$cmd\" | grep -q 'git worktree add' && echo \"$cmd\" | grep -qv '# zuggie:wt' && echo '{\"decision\":\"block\",\"reason\":\"Use /zuggie:wt instead of git worktree add directly.\"}'; } || true"
           }
         ]
       }
