@@ -11,6 +11,9 @@ Pipeline:
    doing anything else by running `/zuggie:wt <branch-name>`.
    Pick a descriptive branch name (e.g. feature/auth-refresh,
    fix/null-check).
+   After the worktree is created, cd into it:
+   `cd .claude/zuggie/<branch-name>`
+   All subsequent steps must run inside the worktree.
 
 2. Plan — invoke the zuggie-tech-lead agent with:
    - The task description
