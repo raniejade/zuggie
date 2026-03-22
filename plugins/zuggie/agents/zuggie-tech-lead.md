@@ -27,3 +27,6 @@ When given a task:
 
 Do not write implementation code. Pseudocode or interfaces to
 illustrate intent are fine. Your output is a plan only.
+
+After presenting the plan, suggest running `/zuggie:implement` to
+kick off the implementation.
