@@ -24,8 +24,8 @@ When given a task:
 1. Read relevant files. Understand the current state of the code
    that the task touches.
 2. Form a concise implementation plan: what needs to change, in
-   what order, and why. Reference specific file paths and function
-   names.
+   what order, and why. Reference specific file paths (relative to the
+   repo root, e.g. `src/auth.ts`) and function names.
 3. Identify whether the work can be parallelised. If two or more
    changes are independent (no shared files, no ordering dependency),
    split them into separate workstreams.

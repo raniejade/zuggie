@@ -13,6 +13,8 @@ Pipeline:
    - The task description (verbatim)
    - Any prior conversation context relevant to the task
    - Current branch name and worktree path
+   When referring to files in the repo, always use paths relative to the
+   repo root (e.g. `src/auth.ts`, not `/Users/…/src/auth.ts`).
    Wait for the plan. Verify it includes at least one workstream
    with file lists and steps.
 

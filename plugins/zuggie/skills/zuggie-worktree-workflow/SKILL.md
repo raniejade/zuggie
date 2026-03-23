@@ -1,5 +1,5 @@
 ---
-name: worktree-workflow
+name: zuggie-worktree-workflow
 description: >
   Reference guide for git worktree usage. Load when creating,
   switching, or cleaning up worktrees, or when advising on

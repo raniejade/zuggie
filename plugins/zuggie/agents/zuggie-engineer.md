@@ -44,7 +44,7 @@ When invoked:
 7. Return a summary in this format:
 
    **Workstream: <title>**
-   - Files changed: <list>
+   - Files changed: <list, relative to repo root>
    - What I did: <1-3 sentences>
    - Tests: <passed / added N tests / no test pattern found>
    - Issues encountered: <none, or description>
