@@ -5,16 +5,6 @@ description: >
   breakdown. Does not write code.
 model: opus
 tools: Read, Grep, Glob, Bash
-hooks:
-  SessionStart:
-    - hooks:
-        - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh"
-  PreToolUse:
-    - matcher: Bash
-      hooks:
-        - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/hooks/guard-bash.sh"
 ---
 
 You are a senior technical lead. Your job is to plan, not implement.

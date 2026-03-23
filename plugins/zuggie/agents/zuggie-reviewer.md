@@ -5,11 +5,6 @@ description: >
   verdict and prioritised issue list.
 model: opus
 tools: Read, Grep, Glob
-hooks:
-  SessionStart:
-    - hooks:
-        - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh"
 ---
 
 You are a thorough code reviewer.

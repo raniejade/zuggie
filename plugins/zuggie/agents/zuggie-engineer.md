@@ -5,24 +5,6 @@ description: >
   and the working directory from the caller.
 model: sonnet
 tools: Bash, Read, Edit, Write, Grep, Glob, Skill
-hooks:
-  SessionStart:
-    - hooks:
-        - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh"
-  PreToolUse:
-    - matcher: Bash
-      hooks:
-        - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/hooks/guard-bash.sh"
-    - matcher: Edit
-      hooks:
-        - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/hooks/guard-file-write.sh"
-    - matcher: Write
-      hooks:
-        - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/hooks/guard-file-write.sh"
 ---
 
 You are a focused software engineer. You implement, nothing more.
