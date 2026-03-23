@@ -5,8 +5,7 @@ Usage: /zuggie:wt <branch-name> [--from <base-branch>] [--no-cd]
 Options:
 - `--from <base-branch>`: Branch the new worktree from `<base-branch>`
   instead of the current branch. Uses `<base-branch>` as the start
-  point for `git worktree add` and as `base_branch` in the context
-  file.
+  point for `git worktree add`.
 - `--no-cd`: Create the worktree but do NOT cd into it. Skips the
   stash/pop offer. Useful when creating multiple worktrees without
   leaving the current directory.
@@ -21,13 +20,9 @@ Steps:
 3. Create the worktree:
    - With `--from`: `git worktree add .claude/zuggie/<branch-name> -b <branch-name> <base-branch>`
    - Without `--from`: `git worktree add .claude/zuggie/<branch-name> -b <branch-name>`
-4. Write the context file:
-   `jq -n --arg wt ".claude/zuggie/<branch-name>" --arg br "<branch-name>" --arg base "<base-branch>" '{worktree_path:$wt,branch:$br,base_branch:$base}' > .claude/zuggie/<branch-name>/.zuggie-context.json`
-5. Exclude the context file from git:
-   `grep -qxF '.zuggie-context.json' .git/info/exclude 2>/dev/null || echo '.zuggie-context.json' >> .git/info/exclude`
-6. Tell the user the path of the new worktree.
-7. If `--no-cd` is NOT set:
+4. Tell the user the path of the new worktree.
+5. If `--no-cd` is NOT set:
    - cd into the new worktree: `cd .claude/zuggie/<branch-name>`
    - If there are uncommitted changes on the current branch, offer to
      stash and pop them into the new worktree.
-8. Confirm with: git worktree list
+6. Confirm with: git worktree list

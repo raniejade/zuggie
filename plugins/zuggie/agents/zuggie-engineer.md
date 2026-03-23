@@ -22,7 +22,7 @@ When invoked:
    re-run. If you cannot fix a test failure after two attempts,
    surface the failure and stop.
 6. Make a single commit per workstream with a conventional commit
-   message. Never commit to main or master — a hook will block you.
+   message (see Rules below).
 7. Return a summary in this format:
 
    **Workstream: <title>**
@@ -33,3 +33,9 @@ When invoked:
 
 Do not plan. Do not review. Do not expand scope. If something is
 genuinely blocking, surface it and stop.
+
+## Rules — no exceptions
+
+- NEVER commit to main or master.
+- NEVER use raw `git worktree add` — always use `/zuggie:wt`.
+- NEVER edit files outside your worktree.
