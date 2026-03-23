@@ -11,6 +11,25 @@ PASS=0
 FAIL=0
 TOTAL=0
 
+setup_fixtures() {
+  TEST_ROOT=$(mktemp -d)
+  export TEST_ROOT
+  # Worktree "feature" with context file
+  mkdir -p "$TEST_ROOT/.claude/zuggie/feature/src"
+  echo '{"branch":"feature","base_branch":"main"}' \
+    > "$TEST_ROOT/.claude/zuggie/feature/.zuggie-context.json"
+  # Worktree "fix-bug" with context file
+  mkdir -p "$TEST_ROOT/.claude/zuggie/fix-bug/src"
+  echo '{"branch":"fix-bug","base_branch":"main"}' \
+    > "$TEST_ROOT/.claude/zuggie/fix-bug/.zuggie-context.json"
+  # Non-worktree project root (no context file)
+  mkdir -p "$TEST_ROOT/src"
+}
+
+teardown_fixtures() {
+  rm -rf "$TEST_ROOT"
+}
+
 assert_blocked() {
   local test_name="$1"
   local output="$2"
@@ -45,6 +64,9 @@ run_suite() {
   source "$TESTS_DIR/$suite"
   echo ""
 }
+
+setup_fixtures
+trap teardown_fixtures EXIT
 
 # Run all test suites
 for suite in "$TESTS_DIR"/test_*.sh; do
