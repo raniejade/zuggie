@@ -4,7 +4,7 @@ description: >
   Reference guide for git worktree usage. Load when creating,
   switching, or cleaning up worktrees, or when advising on
   worktree-based workflow.
-version: 1.0.0
+version: 1.0.1
 ---
 
 # Git worktree workflow
@@ -32,21 +32,13 @@ Name branches descriptively: feature/auth-refresh, fix/null-check.
     # From inside the worktree
     git add -A && git commit -m "..."
 
-    # Clean up the worktree (do NOT merge back to main/master)
+    # Clean up the worktree
     git worktree remove .claude/zuggie/<branch-name>
 
-**Important:** Never merge the branch back into main/master unless the
-user explicitly asks you to. Leave the branch as-is for the user to
-merge via PR or however they prefer.
+**Important:** Never merge the branch into main/master yourself. Leave
+the branch for the user to merge via PR or however they prefer.
 
-### If the user gives permission to merge
-
-    git checkout main        # or master
-    git merge <branch-name>
-    git worktree remove .claude/zuggie/<branch-name>
-    git branch -d <branch-name>
-
-### If the user says the PR has been merged/integrated
+### After the user says the PR has been merged/integrated
 
 No merge needed — just clean up:
 
