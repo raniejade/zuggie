@@ -20,4 +20,10 @@ fi
 # Block other mutating git commands when not in a worktree
 if ! zuggie_in_worktree "$cwd" && echo "$cmd" | grep -qE 'git\s+(push|merge|rebase|reset|cherry-pick|rm|mv|restore|clean)'; then
   echo '{"decision":"block","reason":"Mutating git commands must run inside a worktree. cd into .claude/zuggie/<branch> first."}'
+  exit 0
+fi
+
+# Auto-approve when inside a worktree (sandbox constrains filesystem/network)
+if zuggie_in_worktree "$cwd"; then
+  echo '{"decision":"allow"}'
 fi

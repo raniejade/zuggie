@@ -1,6 +1,6 @@
-# Tests for plugins/zuggie/hooks/session-start.sh
+# Tests for plugins/zuggie/hooks/init-context.sh
 
-SESSION_START="$HOOKS_DIR/session-start.sh"
+SESSION_START="$HOOKS_DIR/init-context.sh"
 
 # Helper: assert env file contains a line matching pattern
 assert_env_contains() {

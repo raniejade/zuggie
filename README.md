@@ -25,6 +25,16 @@ on main or master directly, zuggie will remind you to use a worktree.
     /plugin marketplace add raniejade/zuggie
     /plugin install zuggie@zuggie
 
+## Permissions
+
+Zuggie auto-approves Edit, Write, and Bash tool calls when the working
+directory is inside a zuggie worktree (`.claude/zuggie/<branch>`). This
+prevents sub-agents from prompting for permission on every operation.
+
+Outside a worktree, normal permission flow applies. Edits to files
+outside the active worktree are blocked, and git add/commit on
+main/master is always blocked.
+
 ## Customisation
 
 ### Agent models

@@ -55,11 +55,11 @@ assert_allowed() {
   local test_name="$1"
   local output="$2"
   TOTAL=$((TOTAL + 1))
-  if [ -z "$output" ]; then
+  if [ -z "$output" ] || echo "$output" | grep -q '"decision":"allow"'; then
     PASS=$((PASS + 1))
   else
     echo "  FAIL: $test_name"
-    echo "    expected: allow (no output)"
+    echo "    expected: allow (no output or {\"decision\":\"allow\"})"
     echo "    got:      '$output'"
     FAIL=$((FAIL + 1))
   fi

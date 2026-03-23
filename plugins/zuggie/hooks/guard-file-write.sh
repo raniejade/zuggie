@@ -14,4 +14,6 @@ worktree_root=$(zuggie_worktree_root "$cwd") || exit 0
 
 if [[ "$path" != "$worktree_root"/* ]]; then
   echo '{"decision":"block","reason":"You are in a worktree but editing a file outside it. Use the worktree copy of this file instead."}'
+else
+  echo '{"decision":"allow"}'
 fi
