@@ -52,6 +52,24 @@ Wait for the plan. Verify it includes at least one workstream with file
 lists and steps. Do NOT proceed to step 3 until you have received the
 tech-lead's plan.
 
+If the plan contains **exploration workstreams** (type: exploration),
+go to step 2a before proceeding.
+
+### Step 2a — Exploration (only if the plan includes exploration workstreams)
+
+For each exploration workstream, spawn `zuggie:zuggie-engineer` with the
+exploration workstream. The engineer investigates and reports findings
+(no code changes expected).
+
+Once all exploration workstreams complete, re-invoke `zuggie:zuggie-tech-lead`
+with:
+- The original task description
+- The exploration findings from each engineer
+- The previous plan (for reference)
+
+The tech-lead will produce a revised plan with concrete implementation
+workstreams. Use the revised plan for all subsequent steps.
+
 ### Step 3 — Create workstream worktrees
 
 If the plan has **more than one workstream**, create a sub-worktree for
