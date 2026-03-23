@@ -14,19 +14,26 @@ TOTAL=0
 setup_fixtures() {
   TEST_ROOT=$(mktemp -d)
   export TEST_ROOT
-  # Worktree "feature" with context file
-  mkdir -p "$TEST_ROOT/.claude/zuggie/feature/src"
+  # Create a real git repo so git branch --show-current works
+  git init "$TEST_ROOT" >/dev/null 2>&1
+  git -C "$TEST_ROOT" commit --allow-empty -m "init" >/dev/null 2>&1
+  # Create real worktrees with context files
+  git -C "$TEST_ROOT" worktree add "$TEST_ROOT/.claude/zuggie/feature" -b feature >/dev/null 2>&1
   echo '{"branch":"feature","base_branch":"main"}' \
     > "$TEST_ROOT/.claude/zuggie/feature/.zuggie-context.json"
-  # Worktree "fix-bug" with context file
-  mkdir -p "$TEST_ROOT/.claude/zuggie/fix-bug/src"
+  mkdir -p "$TEST_ROOT/.claude/zuggie/feature/src"
+  git -C "$TEST_ROOT" worktree add "$TEST_ROOT/.claude/zuggie/fix-bug" -b fix-bug >/dev/null 2>&1
   echo '{"branch":"fix-bug","base_branch":"main"}' \
     > "$TEST_ROOT/.claude/zuggie/fix-bug/.zuggie-context.json"
+  mkdir -p "$TEST_ROOT/.claude/zuggie/fix-bug/src"
   # Non-worktree project root (no context file)
   mkdir -p "$TEST_ROOT/src"
 }
 
 teardown_fixtures() {
+  # Remove worktrees before deleting the directory
+  git -C "$TEST_ROOT" worktree remove "$TEST_ROOT/.claude/zuggie/feature" --force 2>/dev/null
+  git -C "$TEST_ROOT" worktree remove "$TEST_ROOT/.claude/zuggie/fix-bug" --force 2>/dev/null
   rm -rf "$TEST_ROOT"
 }
 
