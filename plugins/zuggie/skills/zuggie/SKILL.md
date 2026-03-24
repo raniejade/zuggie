@@ -36,6 +36,15 @@ produce — actually spawn it.
 - **NEVER write or edit code yourself.** All code changes go through
   zuggie-engineer agents.
 
+## Bash rules
+
+These apply to you (the orchestrator) and all agents you spawn. Include
+them in every agent prompt:
+
+- Do not chain Bash commands with `&&` or `;` — run each command as a
+  separate Bash call so failures are visible. Piping output to another
+  command (e.g. `cmd | grep`) is fine.
+
 ## Pipeline
 
 ### Step 1 — Worktree
