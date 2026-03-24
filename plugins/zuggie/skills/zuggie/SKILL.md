@@ -1,6 +1,16 @@
+---
+name: zuggie
+description: >
+  Full planning, implementation, and review pipeline using zuggie agents.
+  TRIGGER when: user asks to "implement using zuggie", "use zuggie",
+  "implement with zuggie", or references the zuggie workflow for
+  implementing a task.
+version: 1.0.0
+---
+
 Run the full planning, implementation, and review pipeline.
 
-Usage: /zuggie:implement <task description>
+Usage: /zuggie <task description>
 
 ## Your role
 
@@ -30,11 +40,13 @@ produce — actually spawn it.
 
 ### Step 1 — Worktree
 
-If on main or master, run `/zuggie:wt <branch-name>` with a descriptive
-name (e.g. `feature/auth-refresh`, `fix/null-check`).
+If on main or master, create a worktree with a descriptive branch name
+(e.g. `feature/auth-refresh`, `fix/null-check`):
 
-cd into `.claude/zuggie/<branch-name>`. All subsequent steps run inside
-this worktree.
+    git worktree add .claude/zuggie/<branch-name> -b <branch-name>
+    cd .claude/zuggie/<branch-name>
+
+All subsequent steps run inside this worktree.
 
 Record these values — you will need them throughout the pipeline:
 - `BASE_BRANCH`: the branch you were on before creating the worktree
@@ -74,11 +86,12 @@ workstreams. Use the revised plan for all subsequent steps.
 
 If the plan has **more than one workstream**, create a sub-worktree for
 each independent workstream:
-```
-/zuggie:wt <FEATURE_BRANCH>-ws-<N> --from <FEATURE_BRANCH> --no-cd
-```
-where `<N>` is the workstream number (1, 2, …). Do NOT create worktrees
-for dependent workstreams yet (see step 4).
+
+    git worktree add .claude/zuggie/<FEATURE_BRANCH>-ws-<N> -b <FEATURE_BRANCH>-ws-<N> <FEATURE_BRANCH>
+
+where `<N>` is the workstream number (1, 2, …). Do NOT cd into these —
+stay in the feature worktree. Do NOT create worktrees for dependent
+workstreams yet (see step 4).
 
 If the plan has **exactly one workstream**, skip this step — the single
 engineer works directly on the feature branch worktree.
@@ -94,7 +107,7 @@ For each workstream, run the implement-review-triage cycle:
 - The full plan (so the engineer has context)
 - Its specific workstream (title, files, steps)
 - The original task description
-- The branch name to use with `/zuggie:wt-cd`
+- The branch name to work on
 
 **b. Review** — after the engineer completes, spawn
 `zuggie:zuggie-reviewer` with:
@@ -120,7 +133,7 @@ concurrently.
    `cd` to the feature worktree, then
    `git merge <FEATURE_BRANCH>-ws-<dep> --no-edit`
 2. Create the dependent workstream's worktree:
-   `/zuggie:wt <FEATURE_BRANCH>-ws-<N> --from <FEATURE_BRANCH> --no-cd`
+   `git worktree add .claude/zuggie/<FEATURE_BRANCH>-ws-<N> -b <FEATURE_BRANCH>-ws-<N> <FEATURE_BRANCH>`
 3. Launch the dependent workstream's implement-review-triage cycle.
 
 If an engineer reports a blocking issue, stop the pipeline and surface
@@ -142,8 +155,9 @@ c. If a merge produces conflicts:
      - The list of conflicting files
      - The workstream description
 d. Clean up each sub-worktree:
-   `git worktree remove .claude/zuggie/<FEATURE_BRANCH>-ws-<N>`
-   `git branch -d <FEATURE_BRANCH>-ws-<N>`
+
+       git worktree remove .claude/zuggie/<FEATURE_BRANCH>-ws-<N>
+       git branch -d <FEATURE_BRANCH>-ws-<N>
 
 ### Step 6 — Final unified review
 

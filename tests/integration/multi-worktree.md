@@ -5,7 +5,7 @@
 Run the following command:
 
 ```
-/zuggie:implement Add two independent utility modules: (1) a string utils module at src/string-utils.js with functions capitalize and reverse, and (2) a math utils module at src/math-utils.js with functions clamp and lerp. Each module should export its functions. Add basic tests for each module.
+/zuggie Add two independent utility modules: (1) a string utils module at src/string-utils.js with functions capitalize and reverse, and (2) a math utils module at src/math-utils.js with functions clamp and lerp. Each module should export its functions. Add basic tests for each module.
 ```
 
 This task is designed to produce at least 2 independent workstreams
@@ -58,7 +58,7 @@ After the pipeline completes, verify each item:
 Run a simpler task:
 
 ```
-/zuggie:implement Add a src/array-utils.js module with a unique function that removes duplicates from an array. Add a basic test.
+/zuggie Add a src/array-utils.js module with a unique function that removes duplicates from an array. Add a basic test.
 ```
 
 ### Verification Checklist

@@ -4,21 +4,15 @@ A Claude Code plugin for structured development workflow. Non-trivial
 work gets a dedicated worktree, a tech-lead plan, parallel engineer
 implementation, and a reviewer pass — all from a single command.
 
-## Commands
+## Usage
 
-- /zuggie:implement <task> — run the full pipeline
-- /zuggie:wt <branch> — create a git worktree
+    /zuggie <task description>
 
-## How it works
-
-/zuggie:implement runs a three-stage pipeline:
+This runs a three-stage pipeline:
 
 1. zuggie-tech-lead (opus) — plans the work and identifies parallel workstreams
 2. zuggie-engineer (sonnet) — one per workstream, spawned in parallel where possible
 3. zuggie-reviewer (opus) — reviews the diff, zuggie triages issues and fixes blockers
-
-The PreToolUse hook acts as a safety net: if you start editing files
-on main or master directly, zuggie will remind you to use a worktree.
 
 ## Installation
 
