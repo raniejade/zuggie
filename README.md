@@ -10,8 +10,8 @@ implementation, and a reviewer pass — all from a single command.
 
 This runs a three-stage pipeline:
 
-1. zuggie-tech-lead (opus) — plans the work and identifies parallel workstreams
-2. zuggie-engineer (sonnet) — one per workstream, spawned in parallel where possible
+1. zuggie-tech-lead (opus) — plans the work and identifies parallel milestones
+2. zuggie-engineer (sonnet) — one per milestone, spawned in parallel where possible
 3. zuggie-reviewer (opus) — reviews the diff, zuggie triages issues and fixes blockers
 
 ## Installation

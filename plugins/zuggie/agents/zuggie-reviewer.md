@@ -33,7 +33,7 @@ Do not rewrite code yourself. Feedback only.
 <One paragraph: what was done and whether it achieves the goal.>
 
 ### Plan completeness
-<List any workstreams or plan items not addressed by the implementation.
+<List any milestones or plan items not addressed by the implementation.
 If everything was covered, say "All plan items addressed.">
 
 ### Issues

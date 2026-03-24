@@ -1,6 +1,6 @@
 {
   "name": "zuggie",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Structured development workflow with planning, parallel implementation, and review",
   "author": { "name": "raniejade" },
   "repository": "https://github.com/raniejade/zuggie",

@@ -31,7 +31,7 @@ produce — actually spawn it.
   feature branches. The user merges to main themselves.
 - **NEVER skip the Plan step.** You MUST spawn zuggie-tech-lead even if
   you think you already understand the task. The tech-lead reads the
-  actual code, identifies files, and produces the workstream breakdown.
+  actual code, identifies files, and produces the milestone breakdown.
   Without it you are guessing.
 - **NEVER write or edit code yourself.** All code changes go through
   zuggie-engineer agents.
@@ -69,52 +69,52 @@ Spawn `zuggie:zuggie-tech-lead` with:
 - Any prior conversation context relevant to the task
 - Current branch name and worktree path
 
-Wait for the plan. Verify it includes at least one workstream with file
+Wait for the plan. Verify it includes at least one milestone with file
 lists and steps. Do NOT proceed to step 3 until you have received the
 tech-lead's plan.
 
-If the plan contains **exploration workstreams** (type: exploration),
+If the plan contains **exploration milestones** (type: exploration),
 go to step 2a before proceeding.
 
-### Step 2a — Exploration (only if the plan includes exploration workstreams)
+### Step 2a — Exploration (only if the plan includes exploration milestones)
 
-For each exploration workstream, spawn `zuggie:zuggie-engineer` with the
-exploration workstream. The engineer investigates and reports findings
+For each exploration milestone, spawn `zuggie:zuggie-engineer` with the
+exploration milestone. The engineer investigates and reports findings
 (no code changes expected).
 
-Once all exploration workstreams complete, re-invoke `zuggie:zuggie-tech-lead`
+Once all exploration milestones complete, re-invoke `zuggie:zuggie-tech-lead`
 with:
 - The original task description
 - The exploration findings from each engineer
 - The previous plan (for reference)
 
 The tech-lead will produce a revised plan with concrete implementation
-workstreams. Use the revised plan for all subsequent steps.
+milestones. Use the revised plan for all subsequent steps.
 
-### Step 3 — Create workstream worktrees
+### Step 3 — Create milestone worktrees
 
-If the plan has **more than one workstream**, create a sub-worktree for
-each independent workstream:
+If the plan has **more than one milestone**, create a sub-worktree for
+each independent milestone:
 
-    git worktree add .claude/zuggie/<FEATURE_BRANCH>-ws-<N> -b <FEATURE_BRANCH>-ws-<N> <FEATURE_BRANCH>
+    git worktree add .claude/zuggie/<FEATURE_BRANCH>-ms-<N> -b <FEATURE_BRANCH>-ms-<N> <FEATURE_BRANCH>
 
-where `<N>` is the workstream number (1, 2, …). Do NOT cd into these —
+where `<N>` is the milestone number (1, 2, …). Do NOT cd into these —
 stay in the feature worktree. Do NOT create worktrees for dependent
-workstreams yet (see step 4).
+milestones yet (see step 4).
 
-If the plan has **exactly one workstream**, skip this step — the single
+If the plan has **exactly one milestone**, skip this step — the single
 engineer works directly on the feature branch worktree.
 
-### Step 4 — Implement + per-workstream review
+### Step 4 — Implement + per-milestone review
 
-For each workstream, run the implement-review-triage cycle:
+For each milestone, run the implement-review-triage cycle:
 
 **a. Implement** — spawn `zuggie:zuggie-engineer` with:
-- Working directory: the workstream worktree path
-  (`.claude/zuggie/<FEATURE_BRANCH>-ws-<N>`), or the feature worktree
-  if single workstream
+- Working directory: the milestone worktree path
+  (`.claude/zuggie/<FEATURE_BRANCH>-ms-<N>`), or the feature worktree
+  if single milestone
 - The full plan (so the engineer has context)
-- Its specific workstream (title, files, steps)
+- Its specific milestone (title, files, steps)
 - The original task description
 - The branch name to work on
 
@@ -123,50 +123,50 @@ For each workstream, run the implement-review-triage cycle:
 - The original task description
 - The tech-lead's plan
 - The engineer's summary
-- Output of `git diff <FEATURE_BRANCH>...<FEATURE_BRANCH>-ws-<N>`
-  (or `git diff <BASE_BRANCH>...HEAD` if single workstream)
+- Output of `git diff <FEATURE_BRANCH>...<FEATURE_BRANCH>-ms-<N>`
+  (or `git diff <BASE_BRANCH>...HEAD` if single milestone)
 
 **c. Triage** the review:
-- **Blocking**: spawn `zuggie:zuggie-engineer` in the same workstream
+- **Blocking**: spawn `zuggie:zuggie-engineer` in the same milestone
   worktree to fix. Pass the reviewer's issue description as the
-  workstream, plus the relevant files.
+  milestone, plus the relevant files.
 - **Minor/nit**: defer unless the fix is a one-line change.
 - Only re-review if the reviewer's verdict was "request changes".
 
-**Parallelism**: launch independent workstreams (dependencies: "none")
+**Parallelism**: launch independent milestones (dependencies: "none")
 in parallel — each runs its own implement-review-triage cycle
 concurrently.
 
-**Dependent workstreams**: after the dependency's cycle completes:
+**Dependent milestones**: after the dependency's cycle completes:
 1. Merge the dependency's branch into the **feature branch** (NOT main):
    `cd` to the feature worktree, then
-   `git merge <FEATURE_BRANCH>-ws-<dep> --no-edit`
-2. Create the dependent workstream's worktree:
-   `git worktree add .claude/zuggie/<FEATURE_BRANCH>-ws-<N> -b <FEATURE_BRANCH>-ws-<N> <FEATURE_BRANCH>`
-3. Launch the dependent workstream's implement-review-triage cycle.
+   `git merge <FEATURE_BRANCH>-ms-<dep> --no-edit`
+2. Create the dependent milestone's worktree:
+   `git worktree add .claude/zuggie/<FEATURE_BRANCH>-ms-<N> -b <FEATURE_BRANCH>-ms-<N> <FEATURE_BRANCH>`
+3. Launch the dependent milestone's implement-review-triage cycle.
 
 If an engineer reports a blocking issue, stop the pipeline and surface
 it to the user.
 
-### Step 5 — Merge workstreams
+### Step 5 — Merge milestones
 
 Only if sub-worktrees were created:
 
 a. `cd` into the feature worktree.
-b. For each workstream branch not yet merged:
-   `git merge <FEATURE_BRANCH>-ws-<N> --no-edit`
+b. For each milestone branch not yet merged:
+   `git merge <FEATURE_BRANCH>-ms-<N> --no-edit`
    **Target is always the FEATURE_BRANCH, never main/master.**
 c. If a merge produces conflicts:
    - `git merge --abort`
    - Spawn `zuggie:zuggie-engineer` in the feature worktree to manually
      apply and resolve the changes. Provide:
-     - The diff: `git diff <FEATURE_BRANCH>...<FEATURE_BRANCH>-ws-<N>`
+     - The diff: `git diff <FEATURE_BRANCH>...<FEATURE_BRANCH>-ms-<N>`
      - The list of conflicting files
-     - The workstream description
+     - The milestone description
 d. Clean up each sub-worktree:
 
-       git worktree remove .claude/zuggie/<FEATURE_BRANCH>-ws-<N>
-       git branch -d <FEATURE_BRANCH>-ws-<N>
+       git worktree remove .claude/zuggie/<FEATURE_BRANCH>-ms-<N>
+       git branch -d <FEATURE_BRANCH>-ms-<N>
 
 ### Step 6 — Final unified review
 
@@ -176,7 +176,7 @@ Spawn `zuggie:zuggie-reviewer` with:
 - All engineer summaries
 - Output of `git diff <BASE_BRANCH>...HEAD` on the feature branch
 
-This review focuses on cross-workstream integration: consistency,
+This review focuses on cross-milestone integration: consistency,
 missing connections, conflicting patterns.
 
 Triage as usual:
