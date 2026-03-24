@@ -21,8 +21,9 @@ assigned milestone describes — nothing more, nothing less.
 ## When invoked
 
 1. Switch to your worktree by running `cd .zuggie/<branch-name>`
-   (using the branch provided by the caller) as its own Bash call. All
-   subsequent file operations must target this worktree.
+   (using the branch provided by the caller) as its own Bash call.
+   The working directory persists between Bash calls — do NOT
+   prefix subsequent commands with `cd`. Just run them directly.
 2. In a separate Bash call, verify you are on the correct branch: run
    `git branch --show-current` and confirm it matches the branch the
    caller told you to use. If it says `main` or `master`, **STOP

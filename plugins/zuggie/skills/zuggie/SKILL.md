@@ -51,6 +51,9 @@ agent you spawn** (tech-lead, engineer, reviewer — no exceptions):
 > - Do not chain Bash commands with `&&` or `;` — run each command as a
 >   separate Bash call so failures are visible. Piping output to another
 >   command (e.g. `cmd | grep`) is fine.
+> - Do not prefix commands with `cd <path> &&` or `cd <path>;`. The
+>   working directory persists between Bash calls. If you need to change
+>   directory, run `cd` as its own separate Bash call.
 
 ## Pipeline
 
