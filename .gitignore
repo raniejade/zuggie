@@ -9,3 +9,5 @@ Thumbs.db
 .idea/
 .vscode/
 *.sublime-workspace
+
+.claude/*
