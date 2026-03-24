@@ -59,8 +59,8 @@ agent you spawn** (tech-lead, engineer, reviewer — no exceptions):
 If on main or master, create a worktree with a descriptive branch name
 (e.g. `feature/auth-refresh`, `fix/null-check`):
 
-    git worktree add .claude/zuggie/<branch-name> -b <branch-name>
-    cd .claude/zuggie/<branch-name>
+    git worktree add .zuggie/<branch-name> -b <branch-name>
+    cd .zuggie/<branch-name>
 
 All subsequent steps run inside this worktree.
 
@@ -103,7 +103,7 @@ milestones. Use the revised plan for all subsequent steps.
 If the plan has **more than one milestone**, create a sub-worktree for
 each independent milestone:
 
-    git worktree add .claude/zuggie/<FEATURE_BRANCH>-ms-<N> -b <FEATURE_BRANCH>-ms-<N> <FEATURE_BRANCH>
+    git worktree add .zuggie/<FEATURE_BRANCH>-ms-<N> -b <FEATURE_BRANCH>-ms-<N> <FEATURE_BRANCH>
 
 where `<N>` is the milestone number (1, 2, …). Do NOT cd into these —
 stay in the feature worktree. Do NOT create worktrees for dependent
@@ -118,7 +118,7 @@ For each milestone, run the implement-review-triage cycle:
 
 **a. Implement** — spawn `zuggie:zuggie-engineer` with:
 - Working directory: the milestone worktree path
-  (`.claude/zuggie/<FEATURE_BRANCH>-ms-<N>`), or the feature worktree
+  (`.zuggie/<FEATURE_BRANCH>-ms-<N>`), or the feature worktree
   if single milestone
 - The full plan (so the engineer has context)
 - Its specific milestone (title, files, steps)
@@ -149,7 +149,7 @@ concurrently.
    `cd` to the feature worktree, then
    `git merge <FEATURE_BRANCH>-ms-<dep> --no-edit`
 2. Create the dependent milestone's worktree:
-   `git worktree add .claude/zuggie/<FEATURE_BRANCH>-ms-<N> -b <FEATURE_BRANCH>-ms-<N> <FEATURE_BRANCH>`
+   `git worktree add .zuggie/<FEATURE_BRANCH>-ms-<N> -b <FEATURE_BRANCH>-ms-<N> <FEATURE_BRANCH>`
 3. Launch the dependent milestone's implement-review-triage cycle.
 
 If an engineer reports a blocking issue, stop the pipeline and surface
@@ -172,7 +172,7 @@ c. If a merge produces conflicts:
      - The milestone description
 d. Clean up each sub-worktree:
 
-       git worktree remove .claude/zuggie/<FEATURE_BRANCH>-ms-<N>
+       git worktree remove .zuggie/<FEATURE_BRANCH>-ms-<N>
        git branch -d <FEATURE_BRANCH>-ms-<N>
 
 ### Step 6 — Final unified review

@@ -20,7 +20,7 @@ assigned milestone describes — nothing more, nothing less.
 
 ## When invoked
 
-1. Switch to your worktree by running `cd .claude/zuggie/<branch-name>`
+1. Switch to your worktree by running `cd .zuggie/<branch-name>`
    (using the branch provided by the caller) as its own Bash call. All
    subsequent file operations must target this worktree.
 2. In a separate Bash call, verify you are on the correct branch: run
