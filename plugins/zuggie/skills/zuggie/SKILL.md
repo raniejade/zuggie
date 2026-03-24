@@ -25,6 +25,11 @@ the appropriate `subagent_type` (e.g. `zuggie:zuggie-tech-lead`).
 Do not simulate the agent's work or summarise what you think it would
 produce — actually spawn it.
 
+When you need to understand the codebase (e.g. before planning, during
+triage), spawn **Explore** agents (`subagent_type: Explore`) rather
+than using Glob, Grep, or Read yourself. Explore agents are fast and
+cheap — use them freely for recon.
+
 ## Hard rules — no exceptions
 
 - **NEVER merge anything into main or master.** All work happens on
@@ -72,12 +77,29 @@ Record these values — you will need them throughout the pipeline:
   (e.g. `main`)
 - `FEATURE_BRANCH`: the new branch name (e.g. `feature/auth-refresh`)
 
+### Step 1a — Pre-planning recon
+
+Before planning, gather lightweight context so the tech-lead starts
+with a clear picture instead of exploring from scratch.
+
+Spawn one or more **Explore** agents (`subagent_type: Explore`) with
+targeted questions about the codebase — e.g. "find files related to
+X", "how does Y work", "what patterns does Z use". Keep prompts
+focused; use multiple agents in parallel when the questions are
+independent.
+
+Pass the exploration findings to the tech-lead in Step 2.
+
+**Do NOT explore the codebase yourself** (no Glob, Grep, or Read calls
+to understand the code). Delegate to Explore agents instead.
+
 ### Step 2 — Plan (MANDATORY — DO NOT SKIP)
 
 Spawn `zuggie:zuggie-tech-lead` with:
 - The task description (verbatim from the user)
 - Any prior conversation context relevant to the task
 - Current branch name and worktree path
+- **Findings from Step 1a** (so the tech-lead doesn't repeat the work)
 
 Wait for the plan. Verify it includes at least one milestone with file
 lists and steps. Do NOT proceed to step 3 until you have received the
