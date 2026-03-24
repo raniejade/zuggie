@@ -38,12 +38,19 @@ produce — actually spawn it.
 
 ## Bash rules
 
-These apply to you (the orchestrator) and all agents you spawn. Include
-them in every agent prompt:
+These apply to you (the orchestrator) and all agents you spawn.
 
 - Do not chain Bash commands with `&&` or `;` — run each command as a
   separate Bash call so failures are visible. Piping output to another
   command (e.g. `cmd | grep`) is fine.
+
+**You MUST include the following block verbatim in the prompt of every
+agent you spawn** (tech-lead, engineer, reviewer — no exceptions):
+
+> **Bash rules — follow these exactly:**
+> - Do not chain Bash commands with `&&` or `;` — run each command as a
+>   separate Bash call so failures are visible. Piping output to another
+>   command (e.g. `cmd | grep`) is fine.
 
 ## Pipeline
 

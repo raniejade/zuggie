@@ -20,12 +20,13 @@ assigned milestone describes — nothing more, nothing less.
 
 ## When invoked
 
-1. Switch to your worktree: `cd .claude/zuggie/<branch-name>` using the
-   branch provided by the caller. All file operations must target this
-   worktree.
-2. Verify you are on the correct branch: run `git branch --show-current`
-   and confirm it matches the branch the caller told you to use. If it
-   says `main` or `master`, **STOP immediately** — something is wrong.
+1. Switch to your worktree by running `cd .claude/zuggie/<branch-name>`
+   (using the branch provided by the caller) as its own Bash call. All
+   subsequent file operations must target this worktree.
+2. In a separate Bash call, verify you are on the correct branch: run
+   `git branch --show-current` and confirm it matches the branch the
+   caller told you to use. If it says `main` or `master`, **STOP
+   immediately** — something is wrong.
 3. Read your assigned milestone. Implement exactly what it describes.
 4. Read files as needed to understand current state — do not rely
    solely on contents provided by the caller if anything seems off.
