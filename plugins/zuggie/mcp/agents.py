@@ -87,9 +87,10 @@ async def run_agent(
     cmd = [
         "claude",
         "-p", prompt,
-        "--output-format", "json",
+        "--output-format", "stream-json",
+        "--verbose",
         "--model", model,
-        "--allowedTools", *allowed_tools,
+        "--allowedTools", ",".join(allowed_tools),
         "--permission-mode", "acceptEdits",
         "--system-prompt", system_prompt,
     ]
@@ -109,16 +110,29 @@ async def run_agent(
             f"stderr: {stderr_text}"
         )
 
-    stdout_text = stdout_bytes.decode("utf-8", errors="replace").strip()
-    try:
-        data = json.loads(stdout_text)
-    except json.JSONDecodeError as exc:
-        return f"Error: failed to parse claude JSON output: {exc}\nRaw output: {stdout_text}"
+    # `--output-format stream-json` emits one JSON object per line
+    # (newline-delimited JSON). We scan for the last message with
+    # type == "result" which carries the assistant's final text response.
+    stdout_text = stdout_bytes.decode("utf-8", errors="replace")
+    result: str | None = None
+    parse_errors: list[str] = []
+    for line in stdout_text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            obj = json.loads(line)
+        except json.JSONDecodeError as exc:
+            parse_errors.append(f"{exc}: {line[:120]}")
+            continue
+        if obj.get("type") == "result":
+            result = obj.get("result")
 
-    # The JSON output from `--output-format json` is a single object with a
-    # "result" field containing the assistant's final text response.
-    result = data.get("result")
     if result is None:
-        return f"Error: unexpected JSON structure from claude: {stdout_text}"
+        errors_detail = "; ".join(parse_errors) if parse_errors else "no result message found"
+        return (
+            f"Error: could not extract result from claude stream-json output "
+            f"({errors_detail}).\nRaw output: {stdout_text[:500]}"
+        )
 
     return str(result)
