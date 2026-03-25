@@ -2,7 +2,7 @@ import asyncio
 import json
 import os
 
-from fastmcp import FastMCP
+from fastmcp import Context, FastMCP
 
 from agents import AGENT_CONFIGS, run_agent
 
@@ -21,7 +21,7 @@ def _resolve_plugin_root() -> str:
 
 
 @mcp.tool()
-async def spawn_agent(type: str, worktree: str, prompt: str) -> str:
+async def spawn_agent(type: str, worktree: str, prompt: str, context: Context) -> str:
     """Spawn a single agent using the claude CLI."""
     if type not in _KNOWN_TYPES:
         return f"Error: unknown agent type {type!r}. Known types: {sorted(_KNOWN_TYPES)}"
@@ -29,11 +29,11 @@ async def spawn_agent(type: str, worktree: str, prompt: str) -> str:
         return f"Error: worktree path does not exist or is not a directory: {worktree!r}"
 
     plugin_root = _resolve_plugin_root()
-    return await run_agent(type, worktree, prompt, plugin_root)
+    return await run_agent(type, worktree, prompt, plugin_root, context=context)
 
 
 @mcp.tool()
-async def spawn_agents(agents: list[dict]) -> str:
+async def spawn_agents(agents: list[dict], context: Context) -> str:
     """Spawn multiple agents concurrently using the claude CLI.
 
     Each element of `agents` must have keys: type, worktree, prompt.
@@ -51,7 +51,7 @@ async def spawn_agents(agents: list[dict]) -> str:
         if not os.path.isdir(worktree):
             return index, f"Error: worktree path does not exist or is not a directory: {worktree!r}"
 
-        result = await run_agent(agent_type, worktree, prompt, plugin_root)
+        result = await run_agent(agent_type, worktree, prompt, plugin_root, context=context)
         return index, result
 
     tasks = [_run_one(i, spec) for i, spec in enumerate(agents)]

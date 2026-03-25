@@ -3,7 +3,10 @@
 import asyncio
 import json
 import os
-from typing import Any
+from typing import Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from fastmcp import Context
 
 AGENT_CONFIGS: dict[str, dict[str, Any]] = {
     "engineer": {
@@ -62,17 +65,39 @@ def load_system_prompt(plugin_root: str, agent_type: str) -> str:
     return content
 
 
+def _extract_text_from_assistant_message(obj: dict) -> str | None:
+    """Extract text content from a stream-json assistant message, if any."""
+    message = obj.get("message")
+    if not isinstance(message, dict):
+        return None
+    content = message.get("content")
+    if not isinstance(content, list):
+        return None
+    parts: list[str] = []
+    for block in content:
+        if isinstance(block, dict) and block.get("type") == "text":
+            text = block.get("text", "")
+            if text:
+                parts.append(text)
+    return "\n".join(parts) if parts else None
+
+
 async def run_agent(
     agent_type: str,
     cwd: str,
     prompt: str,
     plugin_root: str,
+    context: "Context | None" = None,
 ) -> str:
     """Run a claude agent as a subprocess and return the text result.
 
     Constructs the `claude` CLI command with the appropriate flags for the
     given agent type, executes it in the specified working directory, and
-    parses the JSON output to extract the assistant's final text response.
+    parses the JSON output incrementally to extract the assistant's final
+    text response.
+
+    If `context` is provided, intermediate assistant messages are sent as
+    MCP log notifications so the orchestrator can see live progress.
 
     Returns an error message string if the subprocess exits non-zero.
     """
@@ -101,38 +126,61 @@ async def run_agent(
         stderr=asyncio.subprocess.PIPE,
         cwd=cwd,
     )
-    stdout_bytes, stderr_bytes = await proc.communicate()
+
+    assert proc.stdout is not None
+
+    result: str | None = None
+    parse_errors: list[str] = []
+    raw_lines: list[str] = []
+
+    # Read stdout incrementally line by line so we can send progress notifications
+    async for raw_line in proc.stdout:
+        line = raw_line.decode("utf-8", errors="replace").strip()
+        if not line:
+            continue
+        raw_lines.append(line)
+        try:
+            obj = json.loads(line)
+        except json.JSONDecodeError as exc:
+            parse_errors.append(f"{exc}: {line[:120]}")
+            continue
+
+        msg_type = obj.get("type")
+
+        if msg_type == "assistant" and context is not None:
+            text = _extract_text_from_assistant_message(obj)
+            if text:
+                try:
+                    await context.log(
+                        message=f"[{agent_type}] {text}",
+                        level="info",
+                        logger_name="zuggie.agent",
+                    )
+                except Exception:
+                    # Never let notification failures abort the agent run
+                    pass
+
+        elif msg_type == "result":
+            result = obj.get("result")
+
+    # Wait for process to finish and collect stderr
+    await proc.wait()
 
     if proc.returncode != 0:
+        assert proc.stderr is not None
+        stderr_bytes = await proc.stderr.read()
         stderr_text = stderr_bytes.decode("utf-8", errors="replace").strip()
         return (
             f"Error: claude subprocess exited with code {proc.returncode}. "
             f"stderr: {stderr_text}"
         )
 
-    # `--output-format stream-json` emits one JSON object per line
-    # (newline-delimited JSON). We scan for the last message with
-    # type == "result" which carries the assistant's final text response.
-    stdout_text = stdout_bytes.decode("utf-8", errors="replace")
-    result: str | None = None
-    parse_errors: list[str] = []
-    for line in stdout_text.splitlines():
-        line = line.strip()
-        if not line:
-            continue
-        try:
-            obj = json.loads(line)
-        except json.JSONDecodeError as exc:
-            parse_errors.append(f"{exc}: {line[:120]}")
-            continue
-        if obj.get("type") == "result":
-            result = obj.get("result")
-
     if result is None:
         errors_detail = "; ".join(parse_errors) if parse_errors else "no result message found"
+        raw_output = "\n".join(raw_lines)
         return (
             f"Error: could not extract result from claude stream-json output "
-            f"({errors_detail}).\nRaw output: {stdout_text[:500]}"
+            f"({errors_detail}).\nRaw output: {raw_output[:500]}"
         )
 
     return str(result)
