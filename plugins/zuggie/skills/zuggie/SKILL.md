@@ -15,31 +15,34 @@ Usage: /zuggie <task description>
 ## Your role
 
 You are the **orchestrator**. You coordinate the pipeline by spawning
-agents (via the Agent tool) and managing git branches. You do NOT:
+agents (via `spawn_agent` / `spawn_agents` MCP tools) and managing git
+branches. You do NOT:
 - Write or edit application code yourself
 - Skip steps because you think you already know the answer
 - Act as the tech-lead, engineer, or reviewer — you delegate to them
 
-Every step below that says "spawn" means: use the **Agent tool** with
-the appropriate `subagent_type` (e.g. `zuggie:zuggie-tech-lead`).
+Every step below that says "spawn" means: call `spawn_agent` (single)
+or `spawn_agents` (parallel batch) with the appropriate `type` parameter.
 Do not simulate the agent's work or summarise what you think it would
 produce — actually spawn it.
 
 When you need to understand the codebase (e.g. before planning, during
-triage), spawn **Explore** agents (`subagent_type: Explore`) rather
-than using Glob, Grep, or Read yourself. Explore agents are fast and
-cheap — use them freely for recon.
+triage), spawn **Explore** agents (`type: "explore"`) rather than using
+Glob, Grep, or Read yourself. Explore agents are fast and cheap — use
+them freely for recon.
 
 ## Hard rules — no exceptions
 
 - **NEVER merge anything into main or master.** All work happens on
   feature branches. The user merges to main themselves.
-- **NEVER skip the Plan step.** You MUST spawn zuggie-tech-lead even if
+- **NEVER skip the Plan step.** You MUST spawn a tech-lead agent even if
   you think you already understand the task. The tech-lead reads the
   actual code, identifies files, and produces the milestone breakdown.
   Without it you are guessing.
 - **NEVER write or edit code yourself.** All code changes go through
-  zuggie-engineer agents.
+  engineer agents.
+- **NEVER use the built-in Agent tool.** All agent spawning goes through
+  the MCP `spawn_agent` / `spawn_agents` tools.
 
 ## Bash rules
 
@@ -49,7 +52,7 @@ These apply to you (the orchestrator) and all agents you spawn.
   separate Bash call so failures are visible. Piping output to another
   command (e.g. `cmd | grep`) is fine.
 
-**You MUST include the following block verbatim in the prompt of every
+**You MUST include the following block verbatim in the `prompt` of every
 agent you spawn** (tech-lead, engineer, reviewer — no exceptions):
 
 > **Bash rules — follow these exactly:**
@@ -82,20 +85,20 @@ Record these values — you will need them throughout the pipeline:
 Before planning, gather lightweight context so the tech-lead starts
 with a clear picture instead of exploring from scratch.
 
-Spawn one or more **Explore** agents (`subagent_type: Explore`) with
-targeted questions about the codebase — e.g. "find files related to
-X", "how does Y work", "what patterns does Z use". Keep prompts
-focused; use multiple agents in parallel when the questions are
-independent.
+Spawn one or more **Explore** agents using `spawn_agents` with
+`type: "explore"` and targeted questions about the codebase — e.g.
+"find files related to X", "how does Y work", "what patterns does Z
+use". Keep prompts focused; use `spawn_agents` to run multiple agents in
+parallel when the questions are independent.
 
 Pass the exploration findings to the tech-lead in Step 2.
 
 **Do NOT explore the codebase yourself** (no Glob, Grep, or Read calls
-to understand the code). Delegate to Explore agents instead.
+to understand the code). Delegate to explore agents instead.
 
 ### Step 2 — Plan (MANDATORY — DO NOT SKIP)
 
-Spawn `zuggie:zuggie-tech-lead` with:
+Call `spawn_agent` with `type: "tech-lead"` and a `prompt` containing:
 - The task description (verbatim from the user)
 - Any prior conversation context relevant to the task
 - Current branch name and worktree path
@@ -110,12 +113,15 @@ go to step 2a before proceeding.
 
 ### Step 2a — Exploration (only if the plan includes exploration milestones)
 
-For each exploration milestone, spawn `zuggie:zuggie-engineer` with the
-exploration milestone. The engineer investigates and reports findings
-(no code changes expected).
+For each exploration milestone, call `spawn_agent` with `type: "engineer"`
+and the exploration milestone as the prompt. The engineer investigates and
+reports findings (no code changes expected).
 
-Once all exploration milestones complete, re-invoke `zuggie:zuggie-tech-lead`
-with:
+Use `spawn_agents` to run multiple exploration milestones in parallel when
+they are independent.
+
+Once all exploration milestones complete, call `spawn_agent` with
+`type: "tech-lead"` and a `prompt` containing:
 - The original task description
 - The exploration findings from each engineer
 - The previous plan (for reference)
@@ -141,17 +147,18 @@ engineer works directly on the feature branch worktree.
 
 For each milestone, run the implement-review-triage cycle:
 
-**a. Implement** — spawn `zuggie:zuggie-engineer` with:
-- Working directory: the milestone worktree path
+**a. Implement** — call `spawn_agent` with `type: "engineer"` and:
+- `worktree`: the milestone worktree path
   (`.zuggie/<FEATURE_BRANCH>-ms-<N>`), or the feature worktree
   if single milestone
-- The full plan (so the engineer has context)
-- Its specific milestone (title, files, steps)
-- The original task description
-- The branch name to work on
+- `prompt` containing:
+  - The full plan (so the engineer has context)
+  - Its specific milestone (title, files, steps)
+  - The original task description
+  - The branch name to work on
 
-**b. Review** — after the engineer completes, spawn
-`zuggie:zuggie-reviewer` with:
+**b. Review** — after the engineer completes, call `spawn_agent` with
+`type: "reviewer"` and a `prompt` containing:
 - The original task description
 - The tech-lead's plan
 - The engineer's summary
@@ -159,15 +166,15 @@ For each milestone, run the implement-review-triage cycle:
   (or `git diff <BASE_BRANCH>...HEAD` if single milestone)
 
 **c. Triage** the review:
-- **Blocking**: spawn `zuggie:zuggie-engineer` in the same milestone
-  worktree to fix. Pass the reviewer's issue description as the
+- **Blocking**: call `spawn_agent` with `type: "engineer"` in the same
+  milestone worktree to fix. Pass the reviewer's issue description as the
   milestone, plus the relevant files.
 - **Minor/nit**: defer unless the fix is a one-line change.
 - Only re-review if the reviewer's verdict was "request changes".
 
 **Parallelism**: launch independent milestones (dependencies: "none")
-in parallel — each runs its own implement-review-triage cycle
-concurrently.
+in parallel using `spawn_agents` — each runs its own implement-review-triage
+cycle concurrently.
 
 **Dependent milestones**: after the dependency's cycle completes:
 1. Merge the dependency's branch into the **feature branch** (NOT main):
@@ -190,8 +197,9 @@ b. For each milestone branch not yet merged:
    **Target is always the FEATURE_BRANCH, never main/master.**
 c. If a merge produces conflicts:
    - `git merge --abort`
-   - Spawn `zuggie:zuggie-engineer` in the feature worktree to manually
-     apply and resolve the changes. Provide:
+   - Call `spawn_agent` with `type: "engineer"` and `worktree` set to
+     the feature worktree to manually apply and resolve the changes.
+     The `prompt` should include:
      - The diff: `git diff <FEATURE_BRANCH>...<FEATURE_BRANCH>-ms-<N>`
      - The list of conflicting files
      - The milestone description
@@ -202,7 +210,7 @@ d. Clean up each sub-worktree:
 
 ### Step 6 — Final unified review
 
-Spawn `zuggie:zuggie-reviewer` with:
+Call `spawn_agent` with `type: "reviewer"` and a `prompt` containing:
 - The original task description
 - The tech-lead's plan
 - All engineer summaries
@@ -212,8 +220,9 @@ This review focuses on cross-milestone integration: consistency,
 missing connections, conflicting patterns.
 
 Triage as usual:
-- **Blocking**: spawn `zuggie:zuggie-engineer` in the feature worktree
-  to fix. Pass the reviewer's issue description plus relevant files.
+- **Blocking**: call `spawn_agent` with `type: "engineer"` and `worktree`
+  set to the feature worktree to fix. The `prompt` should include the
+  reviewer's issue description plus relevant files.
 - **Minor/nit**: defer unless the fix is a one-line change.
 - Only re-review if the verdict was "request changes".
 
