@@ -4,7 +4,7 @@ import os
 
 from fastmcp import FastMCP
 
-from .agents import AGENT_CONFIGS, run_agent
+from agents import AGENT_CONFIGS, run_agent
 
 mcp = FastMCP(name="zuggie-spawn")
 
