@@ -65,18 +65,17 @@ agent you spawn** (tech-lead, engineer, reviewer — no exceptions):
 Use `TaskCreate` and `TaskUpdate` to give the user real-time visibility
 into the pipeline. Only the orchestrator calls these — agents do not.
 
-### Pipeline tasks (create before Step 1)
+Tasks are displayed in creation order, so create them just-in-time to
+keep the list intuitive.
 
-Create these 5 tasks using `TaskCreate` at the very start:
+### Early pipeline tasks (create before Step 1)
+
+Create these 3 tasks using `TaskCreate` at the very start:
 
 1. **Set up worktree** — activeForm: `Setting up worktree`
 2. **Explore codebase** — activeForm: `Exploring codebase`
 3. **Create implementation plan** — activeForm: `Planning implementation`
    — blockedBy: task 2
-4. **Merge milestones** — activeForm: `Merging milestone branches`
-   — blockedBy: added later (all milestone tasks)
-5. **Final review** — activeForm: `Running final review`
-   — blockedBy: task 4
 
 ### Milestone tasks (create after Step 2)
 
@@ -85,13 +84,20 @@ After the tech-lead produces the plan, create one task per milestone:
 - activeForm: `Implementing <milestone title>`
 - blockedBy: the Plan task, plus any milestone dependency tasks
 
-Then update the Merge task with `addBlockedBy` pointing to all milestone
-task IDs.
+### Late pipeline tasks (create after milestone tasks)
+
+Create these immediately after the milestone tasks so they appear at
+the bottom of the list:
+
+1. **Merge milestones** — activeForm: `Merging milestone branches`
+   — blockedBy: all milestone tasks
+2. **Final review** — activeForm: `Running final review`
+   — blockedBy: Merge task
 
 ### Single-milestone edge case
 
-If the plan has exactly one milestone, delete the Merge task and update
-Final Review to be blockedBy the single milestone task instead.
+If the plan has exactly one milestone, skip creating the Merge task.
+Set Final Review's blockedBy to the single milestone task instead.
 
 ## Pipeline
 
@@ -150,8 +156,8 @@ tech-lead's plan.
 
 If the plan contains **exploration milestones** (type: exploration),
 go to step 2a before proceeding. Otherwise, mark the Plan task as
-`completed` and create the milestone tasks (see "Milestone tasks"
-above), then wire up dependencies.
+`completed`, then create the milestone tasks followed by the late
+pipeline tasks (see "Progress tracking" above).
 
 ### Step 2a — Exploration (only if the plan includes exploration milestones)
 
@@ -172,8 +178,8 @@ activeForm to `Refining implementation plan`. Re-invoke
 The tech-lead will produce a revised plan with concrete implementation
 milestones. Use the revised plan for all subsequent steps.
 
-Mark the Plan task as `completed`. Create the milestone tasks (see
-"Milestone tasks" above) and wire up dependencies.
+Mark the Plan task as `completed`. Create the milestone tasks followed
+by the late pipeline tasks (see "Progress tracking" above).
 
 ### Step 3 — Create milestone worktrees
 
