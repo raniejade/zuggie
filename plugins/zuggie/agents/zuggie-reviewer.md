@@ -3,7 +3,7 @@ name: zuggie-reviewer
 description: >
   Reviews completed work against the plan and diff. Returns a
   verdict and prioritised issue list.
-model: opus
+model: sonnet
 tools: Read, Grep, Glob
 ---
 
