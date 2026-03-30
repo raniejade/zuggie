@@ -3,7 +3,7 @@ name: zuggie-tech-lead
 description: >
   Planning agent: produces an implementation plan and milestone
   breakdown. Does not write code.
-model: opus
+model: sonnet
 tools: Read, Grep, Glob, Bash
 ---
 
