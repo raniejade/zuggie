@@ -72,7 +72,7 @@ keep the list intuitive.
 
 Create these 3 tasks using `TaskCreate` at the very start:
 
-1. **Set up worktree** — activeForm: `Setting up worktree`
+1. **Set up workspace** — activeForm: `Setting up workspace`
 2. **Explore codebase** — activeForm: `Exploring codebase`
 3. **Create implementation plan** — activeForm: `Planning implementation`
    — blockedBy: task 2
@@ -105,18 +105,38 @@ Set Final Review's blockedBy to the single milestone task instead.
 
 Mark the Setup task as `in_progress`.
 
-If on main or master, create a worktree with a descriptive branch name
-(e.g. `feature/auth-refresh`, `fix/null-check`):
+First, check whether you are already inside a separate worktree by
+running:
+
+    git rev-parse --show-toplevel
+
+and comparing it with:
+
+    git worktree list
+
+If the current working directory is inside a **non-main worktree** (i.e.
+not the bare repo or the primary working tree) and the branch is clean
+(`git status` shows no uncommitted changes), then **skip worktree
+creation** — just use the current worktree as-is.
+
+Record these values:
+- `BASE_BRANCH`: `main` (or `master` if that's the default branch)
+- `FEATURE_BRANCH`: the current branch name
+
+If you are on main or master (i.e. in the primary working tree), create
+a worktree with a descriptive branch name (e.g. `feature/auth-refresh`,
+`fix/null-check`):
 
     git worktree add .zuggie/<branch-name> -b <branch-name>
     cd .zuggie/<branch-name>
 
-All subsequent steps run inside this worktree.
-
-Record these values — you will need them throughout the pipeline:
+Record these values:
 - `BASE_BRANCH`: the branch you were on before creating the worktree
   (e.g. `main`)
 - `FEATURE_BRANCH`: the new branch name (e.g. `feature/auth-refresh`)
+
+All subsequent steps run inside the worktree (whether reused or newly
+created).
 
 Mark the Setup task as `completed`.
 
