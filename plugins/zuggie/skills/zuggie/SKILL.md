@@ -224,6 +224,9 @@ For each milestone, run the implement-review-triage cycle:
 - The engineer's summary
 - Output of `git diff <FEATURE_BRANCH>...<FEATURE_BRANCH>-ms-<N>`
   (or `git diff <BASE_BRANCH>...HEAD` if single milestone)
+- The worktree path (`.zuggie/<FEATURE_BRANCH>-ms-<N>`, or the
+  feature worktree path if single milestone) so the reviewer reads
+  files from the correct branch
 
 **c. Triage** the review:
 - **Blocking**: spawn `zuggie:zuggie-engineer` in the same milestone
@@ -282,6 +285,8 @@ Spawn `zuggie:zuggie-reviewer` with:
 - The tech-lead's plan
 - All engineer summaries
 - Output of `git diff <BASE_BRANCH>...HEAD` on the feature branch
+- The feature worktree path (`.zuggie/<FEATURE_BRANCH>`) so the
+  reviewer reads files from the correct branch
 
 This review focuses on cross-milestone integration: consistency,
 missing connections, conflicting patterns.
