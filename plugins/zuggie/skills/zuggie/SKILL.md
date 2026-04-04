@@ -40,6 +40,12 @@ cheap — use them freely for recon.
   Without it you are guessing.
 - **NEVER write or edit code yourself.** All code changes go through
   zuggie-engineer agents.
+- **NEVER accept a deferral of the main task.** If an engineer's
+  summary indicates the core ask was skipped, deferred, or only
+  partially done — treat it as a blocking issue. Re-spawn the engineer
+  to complete the work. Excuses like "this is complex" or "can be done
+  in a follow-up" are not acceptable — the task was already planned and
+  scoped.
 
 ## Bash rules
 

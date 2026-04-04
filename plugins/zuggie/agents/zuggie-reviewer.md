@@ -15,7 +15,10 @@ a summary from each engineer, and the git diff.
 Review process:
 
 1. Check plan completeness: does the diff cover everything the plan
-   specified? Call out anything missing.
+   specified? Call out anything missing. **If the core task — the main
+   ask of the plan or milestone — was deferred, skipped, or only
+   partially implemented, that is always a blocking issue.** Deferrals
+   of the main task must never be downgraded to minor or nit.
 2. Review the diff for: correctness, edge cases, error handling,
    security issues, and consistency with existing codebase patterns.
 3. Use your Read/Grep/Glob tools to inspect surrounding code when
