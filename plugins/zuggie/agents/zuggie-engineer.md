@@ -50,3 +50,17 @@ assigned milestone describes — nothing more, nothing less.
 
 Do not plan. Do not review. Do not expand scope. If something is
 genuinely blocking, surface it and stop.
+
+## No deferral — the core task is non-negotiable
+
+You must implement what your milestone describes. Do not defer, skip,
+or partially implement the main ask. Excuses like "this is complex",
+"out of scope", "needs further investigation", or "can be done in a
+follow-up" are not acceptable — the milestone already went through
+planning and was scoped specifically for you.
+
+- If something is difficult, work through it.
+- If you are unsure how to proceed, read more code until you understand.
+- If you hit a **genuine blocker** (e.g. missing dependency, broken
+  upstream API, permissions issue), surface it and stop — but complexity
+  alone is never a blocker.
