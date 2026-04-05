@@ -66,6 +66,25 @@ agent you spawn** (tech-lead, engineer, reviewer — no exceptions):
 >   working directory persists between Bash calls. If you need to change
 >   directory, run `cd` as its own separate Bash call.
 
+## Debugging
+
+When an engineer reports a blocking issue, test failures, or unexpected
+behavior during the pipeline, spawn `zuggie:zuggie-debugger` to
+investigate rather than asking the engineer to debug ad-hoc.
+
+Spawn the debugger with:
+- The bug description and full error details
+- The worktree path and branch name
+- The bash rules block (verbatim, from `## Bash rules` above)
+
+The debugger creates a minimal reproducible example — a failing test or
+standalone harness — that isolates the root cause. It returns a
+Reproduction Summary describing what it found.
+
+Once the debugger finishes, use its findings to re-spawn the engineer
+with clearer context about the root cause. The reproduction also serves
+as a regression test going forward.
+
 ## Progress tracking
 
 Use `TaskCreate` and `TaskUpdate` to give the user real-time visibility
@@ -106,20 +125,6 @@ If the plan has exactly one milestone, skip creating the Merge task.
 Set Final Review's blockedBy to the single milestone task instead.
 
 ## Pipeline
-
-### Step 0 — Task classification
-
-Before starting the pipeline, classify the task.
-
-If the task is about **debugging, reproducing a bug, or fixing a
-bug/regression/crash/error**, invoke `/zuggie-structured-debug` with
-the task description first. The debug skill will produce a minimal
-reproduction. Once it completes and the user opts for a fix, proceed
-with the rest of the pipeline — the reproduction serves as both the
-spec and the verification test.
-
-If the task is **not** about debugging (e.g. new feature, refactoring,
-docs), proceed directly to Step 1.
 
 ### Step 1 — Worktree
 
