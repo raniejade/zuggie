@@ -68,22 +68,20 @@ agent you spawn** (tech-lead, engineer, reviewer — no exceptions):
 
 ## Debugging
 
-When an engineer reports a blocking issue, test failures, or unexpected
-behavior during the pipeline, spawn `zuggie:zuggie-debugger` to
-investigate rather than asking the engineer to debug ad-hoc.
+When you need to debug an issue at any point in the pipeline, spawn
+`zuggie:zuggie-debugger` instead of debugging yourself or asking an
+engineer to debug ad-hoc. The debugger follows a structured methodology
+and produces a minimal reproducible example (failing test or standalone
+harness) that isolates the root cause.
 
 Spawn the debugger with:
-- The bug description and full error details
+- A description of the issue (error messages, failing behavior, etc.)
 - The worktree path and branch name
 - The bash rules block (verbatim, from `## Bash rules` above)
 
-The debugger creates a minimal reproducible example — a failing test or
-standalone harness — that isolates the root cause. It returns a
-Reproduction Summary describing what it found.
-
-Once the debugger finishes, use its findings to re-spawn the engineer
-with clearer context about the root cause. The reproduction also serves
-as a regression test going forward.
+Use the debugger's findings (Reproduction Summary) to inform next steps —
+whether that means re-spawning an engineer with root-cause context or
+surfacing the issue to the user.
 
 ## Progress tracking
 
