@@ -183,9 +183,13 @@ Mark the Reproduce task as `completed`.
 Mark the Review task as `in_progress`.
 
 Spawn `zuggie:zuggie-reviewer` with:
+- A preamble explaining that this is a **reproduction review**, not an
+  implementation review. The reviewer should treat the Bug Brief as the
+  "plan" and the Reproduction Summary as the "engineer summary". Plan
+  completeness means: does the reproduction cover the reported bug?
 - The original bug description
-- The Bug Brief from Step 1a
-- The debugger's Reproduction Summary
+- The Bug Brief from Step 1a (framed as the plan)
+- The debugger's Reproduction Summary (framed as the engineer summary)
 - Output of `git diff <BASE_BRANCH>...HEAD` on the debug branch
 - The worktree path so the reviewer reads files from the correct branch
 
@@ -213,8 +217,8 @@ Present to the user:
 
 Then ask: **"Would you like to fix this bug using the zuggie workflow?"**
 
-- If yes: invoke `/zuggie` with the bug description, the reproduction
-  file path, and the investigation findings as context. The reproduction
-  serves as both the spec and the verification test — the fix should
-  make the failing test/harness pass.
+- If yes: tell the user to run `/zuggie` with the bug description,
+  reproduction file path, and investigation findings as context. The
+  reproduction serves as both the spec and the verification test — the
+  fix should make the failing test/harness pass.
 - If no: done.
