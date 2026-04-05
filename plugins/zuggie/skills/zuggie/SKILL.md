@@ -107,6 +107,20 @@ Set Final Review's blockedBy to the single milestone task instead.
 
 ## Pipeline
 
+### Step 0 — Task classification
+
+Before starting the pipeline, classify the task.
+
+If the task is about **debugging, reproducing a bug, or fixing a
+bug/regression/crash/error**, invoke `/zuggie-structured-debug` with
+the task description first. The debug skill will produce a minimal
+reproduction. Once it completes and the user opts for a fix, proceed
+with the rest of the pipeline — the reproduction serves as both the
+spec and the verification test.
+
+If the task is **not** about debugging (e.g. new feature, refactoring,
+docs), proceed directly to Step 1.
+
 ### Step 1 — Worktree
 
 Mark the Setup task as `in_progress`.
