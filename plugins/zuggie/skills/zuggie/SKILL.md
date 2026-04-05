@@ -68,20 +68,15 @@ agent you spawn** (tech-lead, engineer, reviewer — no exceptions):
 
 ## Debugging
 
-When you need to debug an issue at any point in the pipeline, spawn
-`zuggie:zuggie-debugger` instead of debugging yourself or asking an
-engineer to debug ad-hoc. The debugger follows a structured methodology
-and produces a minimal reproducible example (failing test or standalone
-harness) that isolates the root cause.
+When you need to debug an issue at any point in the pipeline, invoke
+`/zuggie-structured-debug` with a description of the issue instead of
+debugging yourself or asking an engineer to debug ad-hoc. The debug
+skill runs a full structured pipeline (explore → reproduce → review)
+and produces a minimal reproducible example that isolates the root cause.
 
-Spawn the debugger with:
-- A description of the issue (error messages, failing behavior, etc.)
-- The worktree path and branch name
-- The bash rules block (verbatim, from `## Bash rules` above)
-
-Use the debugger's findings (Reproduction Summary) to inform next steps —
-whether that means re-spawning an engineer with root-cause context or
-surfacing the issue to the user.
+Use the debug skill's findings to inform next steps — whether that
+means re-spawning an engineer with root-cause context or surfacing the
+issue to the user.
 
 ## Progress tracking
 
