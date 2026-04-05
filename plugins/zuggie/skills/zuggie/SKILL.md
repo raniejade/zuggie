@@ -66,6 +66,18 @@ agent you spawn** (tech-lead, engineer, reviewer — no exceptions):
 >   working directory persists between Bash calls. If you need to change
 >   directory, run `cd` as its own separate Bash call.
 
+## Debugging
+
+When you need to debug an issue at any point in the pipeline, invoke
+`/zuggie-structured-debug` with a description of the issue instead of
+debugging yourself or asking an engineer to debug ad-hoc. The debug
+skill runs a full structured pipeline (explore → reproduce → review)
+and produces a minimal reproducible example that isolates the root cause.
+
+Use the debug skill's findings to inform next steps — whether that
+means re-spawning an engineer with root-cause context or surfacing the
+issue to the user.
+
 ## Progress tracking
 
 Use `TaskCreate` and `TaskUpdate` to give the user real-time visibility
