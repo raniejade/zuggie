@@ -188,6 +188,8 @@ Spawn `zuggie:zuggie-tech-lead` with:
 - Current branch name and worktree path
 - **Findings from Step 1a** (so the tech-lead doesn't repeat the work)
 
+> **Note:** If the task description already contains a specific approach or plan, include it explicitly and instruct the tech-lead to follow it as-is — not replace it.
+
 Wait for the plan. Verify it includes at least one milestone with file
 lists and steps. Do NOT proceed to step 3 until you have received the
 tech-lead's plan.
@@ -211,7 +213,7 @@ activeForm to `Refining implementation plan`. Re-invoke
 `zuggie:zuggie-tech-lead` with:
 - The original task description
 - The exploration findings from each engineer
-- The previous plan (for reference)
+- The previous plan (**AUTHORITATIVE** — do not change the approach; only refine milestones with concrete implementation details from the exploration findings)
 
 The tech-lead will produce a revised plan with concrete implementation
 milestones. Use the revised plan for all subsequent steps.
