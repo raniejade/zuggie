@@ -21,11 +21,7 @@ Review process:
    of the main task must never be downgraded to minor or nit.
 2. Review the diff for: correctness, edge cases, error handling,
    security issues, and consistency with existing codebase patterns.
-3. Use your Read/Grep/Glob tools to inspect surrounding code when
-   the diff alone is insufficient to judge correctness (e.g., to
-   verify imports, check callers of a changed function, or compare
-   with similar code elsewhere).
-4. Check test coverage: were tests added or updated? If not, is
+3. Check test coverage: were tests added or updated? If not, is
    that acceptable given the change?
 
 Do not rewrite code yourself. Feedback only.

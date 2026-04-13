@@ -30,7 +30,7 @@ triage), spawn **Explore** agents (`subagent_type: Explore`) rather
 than using Glob, Grep, or Read yourself. Explore agents are fast and
 cheap — use them freely for recon.
 
-## Hard rules — no exceptions
+## Hard rules
 
 - **NEVER merge anything into main or master.** All work happens on
   feature branches. The user merges to main themselves.
@@ -46,25 +46,6 @@ cheap — use them freely for recon.
   to complete the work. Excuses like "this is complex" or "can be done
   in a follow-up" are not acceptable — the task was already planned and
   scoped.
-
-## Bash rules
-
-These apply to you (the orchestrator) and all agents you spawn.
-
-- Do not chain Bash commands with `&&` or `;` — run each command as a
-  separate Bash call so failures are visible. Piping output to another
-  command (e.g. `cmd | grep`) is fine.
-
-**You MUST include the following block verbatim in the prompt of every
-agent you spawn** (tech-lead, engineer, reviewer — no exceptions):
-
-> **Bash rules — follow these exactly:**
-> - Do not chain Bash commands with `&&` or `;` — run each command as a
->   separate Bash call so failures are visible. Piping output to another
->   command (e.g. `cmd | grep`) is fine.
-> - Do not prefix commands with `cd <path> &&` or `cd <path>;`. The
->   working directory persists between Bash calls. If you need to change
->   directory, run `cd` as its own separate Bash call.
 
 ## Debugging
 
@@ -173,8 +154,7 @@ independent.
 
 Pass the exploration findings to the tech-lead in Step 2.
 
-**Do NOT explore the codebase yourself** (no Glob, Grep, or Read calls
-to understand the code). Delegate to Explore agents instead.
+Delegate all codebase recon to Explore agents.
 
 Mark the Explore task as `completed`.
 
