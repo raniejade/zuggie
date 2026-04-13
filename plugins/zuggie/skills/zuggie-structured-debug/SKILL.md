@@ -149,12 +149,11 @@ Spawn `zuggie:zuggie-reviewer` with:
 - Debugger's Reproduction Summary (includes hypothesis ledger, bisect result, mechanism)
 - Git diff: `git diff <BASE_BRANCH>...HEAD` on the debug branch
 - Worktree path
-
-Reviewer checks:
-- Observation Brief is factual (no smuggled hypotheses)
-- Hypothesis ledger has real alternatives, not strawmen
-- Reproduction is minimal
-- Mechanism statement is causal, not merely descriptive
+- Evaluation criteria (include verbatim in the reviewer prompt):
+  - Observation Brief is factual (no smuggled hypotheses)
+  - Hypothesis ledger has real alternatives, not strawmen
+  - Reproduction is minimal
+  - Mechanism statement is causal, not merely descriptive
 
 Triage the review verdict:
 - **Blocking**: re-spawn `zuggie:zuggie-debugger` with the reviewer's
