@@ -32,14 +32,14 @@ assigned milestone describes — nothing more, nothing less.
    and stop.
 5. Make a single commit on your milestone branch with a conventional
    commit message.
-6. Return a summary in this format:
+6. Return a summary using these fields (one line each):
 
-   **Milestone: <title>**
-   - Branch: <branch name>
-   - Files changed: <list, relative to repo root>
-   - What I did: <1-3 sentences>
-   - Tests: <passed / added N tests / no test pattern found>
-   - Issues encountered: <none, or description>
+   **Milestone:** <title>
+   **Branch:** <branch name>
+   **Files changed:** <paths only, relative to repo root, space-separated>
+   **What I did:** <1-3 sentences>
+   **Tests:** <passed / added N tests / no test pattern found>
+   **Issues encountered:** <none, or description>
 
 Do not plan. Do not review. Do not expand scope.
 

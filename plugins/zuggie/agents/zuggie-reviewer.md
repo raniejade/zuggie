@@ -28,18 +28,10 @@ Do not rewrite code yourself. Feedback only.
 
 ## Output format
 
-### Summary
-<One paragraph: what was done and whether it achieves the goal.>
+Line 1: `Verdict: approve | approve with minor fixes | request changes`
 
-### Plan completeness
-<List any milestones or plan items not addressed by the implementation.
-If everything was covered, say "All plan items addressed.">
+Then: `Issues:` followed by bullet lines in the form
+`- [blocking|minor|nit] <short description>`
+or `Issues: none` if there are no issues.
 
-### Issues
-<Numbered list. Each item must include severity:>
-1. [blocking/minor/nit] <description>
-
-If there are no issues, say "No issues found."
-
-### Verdict
-One of: **approve** | **approve with minor fixes** | **request changes**
+Nothing else — no Summary, no Plan completeness narrative.

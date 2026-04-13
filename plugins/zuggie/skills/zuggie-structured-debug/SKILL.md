@@ -125,13 +125,15 @@ targeted questions about the codebase:
 - Understand expected vs. reported behavior in code terms
 - Find related existing tests as reference for style and conventions
 
-Synthesize the exploration findings into a **Bug Brief** to pass to the
-debugger:
+Synthesize the exploration findings into a **Bug Brief** and write it
+to a file at `.zuggie/<DEBUG_BRANCH>/bug-brief.md`. Include:
 - Bug description (verbatim from user input)
 - Affected code area (files, functions, modules)
 - Expected vs. actual behavior
 - Existing test patterns (framework, conventions, run command)
 - Related existing tests (as style reference)
+
+Pass the file path to the debugger — do not inline the content.
 
 Delegate all codebase recon to Explore agents.
 
@@ -142,7 +144,7 @@ Mark the Understand task as `completed`.
 Mark the Reproduce task as `in_progress`.
 
 Spawn `zuggie:zuggie-debugger` with:
-- The Bug Brief from Step 1a
+- Path to the Bug Brief file written in Step 1a
 - The worktree path (absolute path to `.zuggie/<DEBUG_BRANCH>`)
 - The branch name (`DEBUG_BRANCH`)
 
@@ -162,15 +164,13 @@ Mark the Reproduce task as `completed`.
 Mark the Review task as `in_progress`.
 
 Spawn `zuggie:zuggie-reviewer` with:
-- A preamble explaining that this is a **reproduction review**, not an
-  implementation review. The reviewer should treat the Bug Brief as the
-  "plan" and the Reproduction Summary as the "engineer summary". Plan
-  completeness means: does the reproduction cover the reported bug?
-- The original bug description
-- The Bug Brief from Step 1a (framed as the plan)
-- The debugger's Reproduction Summary (framed as the engineer summary)
-- Output of `git diff <BASE_BRANCH>...HEAD` on the debug branch
-- The worktree path so the reviewer reads files from the correct branch
+- A note that this is a **reproduction review**: treat the Bug Brief as
+  the plan, and the Reproduction Summary as the engineer summary. Plan
+  completeness = does the reproduction cover the reported bug?
+- Path to the Bug Brief file (`.zuggie/<DEBUG_BRANCH>/bug-brief.md`)
+- The debugger's Reproduction Summary (terse fields)
+- Git diff: `git diff <BASE_BRANCH>...HEAD` on the debug branch
+- Worktree path so the reviewer reads files from the correct branch
 
 The reviewer evaluates:
 - Does it actually demonstrate the reported bug?
@@ -188,16 +188,13 @@ Mark the Review task as `completed`.
 
 ### Step 4 — Report + optional fix handoff
 
-Present to the user:
-- Reproduction file(s) and the exact command to run them
-- What the reproduction demonstrates (expected vs. actual behavior)
-- Key findings from the investigation (bug mechanism, affected area)
-- Reviewer verdict
+**Repro file(s):** <paths, relative to repo root>
+**Run command:** <exact command>
+**Mechanism:** <one-line bug cause>
+**Reviewer verdict:** <verdict>
+**Deferred issues:** <none, or bullet list>
 
-Then ask: **"Would you like to fix this bug using the zuggie workflow?"**
+Ask: **"Would you like to fix this bug using the zuggie workflow?"**
 
-- If yes: tell the user to run `/zuggie` with the bug description,
-  reproduction file path, and investigation findings as context. The
-  reproduction serves as both the spec and the verification test — the
-  fix should make the failing test/harness pass.
+- If yes: instruct the user to run `/zuggie` passing the bug description, repro file path, and branch name. The repro is the verification test.
 - If no: done.

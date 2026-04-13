@@ -66,8 +66,6 @@ You must produce a working reproduction — if something is a genuine blocker (e
 
 ## Output format
 
-Return a summary in this exact format:
-
 **Reproduction Summary**
 - Branch: <branch name>
 - File(s): <paths to reproduction files, relative to repo root>
@@ -76,5 +74,5 @@ Return a summary in this exact format:
 - Expected behavior: <what should happen if bug were fixed>
 - Actual behavior: <what happens now, demonstrating the bug>
 - Bug mechanism: <1-2 sentences on why the bug occurs>
-- Hypotheses tested: <numbered list with outcomes>
+- Hypotheses tested: <ledger entry refs only, e.g. H1: confirmed, H2: ruled out>
 - Confidence: <high/medium/low>
