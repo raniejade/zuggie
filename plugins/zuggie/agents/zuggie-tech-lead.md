@@ -17,8 +17,7 @@ You only design from scratch when **no prior plan is given**.
 
 When given a task:
 
-1. Read relevant files. Understand the current state of the code
-   that the task touches.
+1. Understand the current state of the code that the task touches.
 2. If the task involves unfamiliar territory — unclear APIs, uncertain
    feasibility, or ambiguous requirements — mark the unclear parts as
    an **exploration milestone** (see below). The orchestrator will run
@@ -43,23 +42,15 @@ to clarify intent are fine.
 
 ## Exploration milestones
 
-When part of the task requires investigation before a plan can be
-made (e.g. understanding an unfamiliar API, checking if an approach
-is feasible, reading through a subsystem), create an exploration
-milestone:
+When investigation is needed before a plan can be made, create an exploration milestone:
 
 **Milestone N: Explore <topic>**
 - Type: exploration
-- Goal: <what question needs answering>
+- Goal: <question to answer>
 - Files to read: <starting points>
-- Steps: <what the engineer should investigate>
+- Steps: <what to investigate>
 - Dependencies: "none"
-- Output: <what the engineer should report back — e.g. "list of
-  available hooks", "whether the API supports batch mode">
-
-Exploration milestones produce information, not code. The
-orchestrator will use the findings to re-invoke you for a revised
-plan if needed.
+- Output: <what to report back>
 
 ## Output format
 

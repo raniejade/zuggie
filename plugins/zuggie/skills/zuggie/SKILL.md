@@ -30,7 +30,7 @@ triage), spawn **Explore** agents (`subagent_type: Explore`) rather
 than using Glob, Grep, or Read yourself. Explore agents are fast and
 cheap — use them freely for recon.
 
-## Hard rules — no exceptions
+## Hard rules
 
 - **NEVER merge anything into main or master.** All work happens on
   feature branches. The user merges to main themselves.
@@ -46,25 +46,6 @@ cheap — use them freely for recon.
   to complete the work. Excuses like "this is complex" or "can be done
   in a follow-up" are not acceptable — the task was already planned and
   scoped.
-
-## Bash rules
-
-These apply to you (the orchestrator) and all agents you spawn.
-
-- Do not chain Bash commands with `&&` or `;` — run each command as a
-  separate Bash call so failures are visible. Piping output to another
-  command (e.g. `cmd | grep`) is fine.
-
-**You MUST include the following block verbatim in the prompt of every
-agent you spawn** (tech-lead, engineer, reviewer — no exceptions):
-
-> **Bash rules — follow these exactly:**
-> - Do not chain Bash commands with `&&` or `;` — run each command as a
->   separate Bash call so failures are visible. Piping output to another
->   command (e.g. `cmd | grep`) is fine.
-> - Do not prefix commands with `cd <path> &&` or `cd <path>;`. The
->   working directory persists between Bash calls. If you need to change
->   directory, run `cd` as its own separate Bash call.
 
 ## Debugging
 
@@ -171,10 +152,7 @@ X", "how does Y work", "what patterns does Z use". Keep prompts
 focused; use multiple agents in parallel when the questions are
 independent.
 
-Pass the exploration findings to the tech-lead in Step 2.
-
-**Do NOT explore the codebase yourself** (no Glob, Grep, or Read calls
-to understand the code). Delegate to Explore agents instead.
+Delegate all codebase recon to Explore agents.
 
 Mark the Explore task as `completed`.
 
@@ -183,10 +161,9 @@ Mark the Explore task as `completed`.
 Mark the Plan task as `in_progress`.
 
 Spawn `zuggie:zuggie-tech-lead` with:
-- The task description (verbatim from the user)
-- Any prior conversation context relevant to the task
+- Task handle (one-line description)
 - Current branch name and worktree path
-- **Findings from Step 1a** (so the tech-lead doesn't repeat the work)
+- Exploration findings from Step 1a (summary text, not raw Explore output)
 
 > **Note:** If the task description already contains a specific approach or plan, include it explicitly and instruct the tech-lead to follow it as-is — not replace it.
 
@@ -252,21 +229,18 @@ For each milestone, run the implement-review-triage cycle:
 - Working directory: the milestone worktree path
   (`.zuggie/<FEATURE_BRANCH>-ms-<N>`), or the feature worktree
   if single milestone
-- The full plan (so the engineer has context)
-- Its specific milestone (title, files, steps)
-- The original task description
-- The branch name to work on
+- Branch name to work on
+- Path to the plan file (engineer will Read it)
+- Milestone handle: title, milestone number
+- Path to the task description or a one-line task handle
 
 **b. Review** — after the engineer completes, spawn
 `zuggie:zuggie-reviewer` with:
-- The original task description
-- The tech-lead's plan
-- The engineer's summary
-- Output of `git diff <FEATURE_BRANCH>...<FEATURE_BRANCH>-ms-<N>`
+- Path to the plan file and a one-line task handle
+- The engineer's summary (terse fields)
+- Git diff: `git diff <FEATURE_BRANCH>...<FEATURE_BRANCH>-ms-<N>`
   (or `git diff <BASE_BRANCH>...HEAD` if single milestone)
-- The worktree path (`.zuggie/<FEATURE_BRANCH>-ms-<N>`, or the
-  feature worktree path if single milestone) so the reviewer reads
-  files from the correct branch
+- Worktree path so the reviewer reads files from the correct branch
 
 **c. Triage** the review:
 - **Blocking**: spawn `zuggie:zuggie-engineer` in the same milestone
@@ -321,12 +295,10 @@ Mark the Merge task as `completed`.
 Mark the Final Review task as `in_progress`.
 
 Spawn `zuggie:zuggie-reviewer` with:
-- The original task description
-- The tech-lead's plan
-- All engineer summaries
-- Output of `git diff <BASE_BRANCH>...HEAD` on the feature branch
-- The feature worktree path (`.zuggie/<FEATURE_BRANCH>`) so the
-  reviewer reads files from the correct branch
+- Path to the plan file and a one-line task handle
+- All engineer summaries (terse fields)
+- Git diff: `git diff <BASE_BRANCH>...HEAD` on the feature branch
+- Feature worktree path so the reviewer reads files from the correct branch
 
 This review focuses on cross-milestone integration: consistency,
 missing connections, conflicting patterns.
@@ -341,9 +313,9 @@ Mark the Final Review task as `completed`.
 
 ### Step 7 — Report
 
-Present to the user:
-- What was implemented (1-3 sentences)
-- Reviewer verdict and how you handled any issues
-- Deferred issues with reasoning
+**Feature:** <one-line summary of what was implemented>
+**Branch:** <FEATURE_BRANCH>
+**Reviewer verdict:** <verdict from final review>
+**Deferred issues:** <none, or bullet list with reason>
 
 Ask if they want changes or are happy to proceed.

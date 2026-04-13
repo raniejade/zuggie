@@ -8,8 +8,7 @@ description: >
 version: 1.0.0
 ---
 
-Run the structured debug pipeline: explore, reproduce, review, and optionally
-hand off to the fix workflow.
+Run the structured debug pipeline: observe, hypothesize, bisect, minimize, explain, review, and optionally hand off to the fix workflow.
 
 Usage: /zuggie-structured-debug <bug description>
 
@@ -23,67 +22,33 @@ agents (via the Agent tool) and managing git branches. You do NOT:
 
 Every step below that says "spawn" means: use the **Agent tool** with
 the appropriate `subagent_type` (e.g. `zuggie:zuggie-debugger`).
-Do not simulate the agent's work or summarise what you think it would
-produce — actually spawn it.
+Do not simulate the agent's work — actually spawn it.
 
-When you need to understand the codebase (e.g. before spawning the
-debugger), spawn **Explore** agents (`subagent_type: Explore`) rather
-than using Glob, Grep, or Read yourself. Explore agents are fast and
-cheap — use them freely for recon.
+Spawn **Explore** agents (`subagent_type: Explore`) for all codebase recon.
 
-## Hard rules — no exceptions
+## Hard rules
 
-- **NEVER merge anything into main or master.** All work happens on
-  debug branches. The user merges to main themselves.
-- **NEVER skip the Explore step.** You MUST spawn Explore agents to
-  gather bug context before invoking the debugger. Without it the
-  debugger is working blind.
-- **NEVER write or edit code yourself.** All code changes go through
-  the debugger agent.
-- **NEVER accept a deferral of the reproduction task.** If the
-  debugger's summary indicates the reproduction was skipped, deferred,
-  or only partially done — treat it as a blocking issue. Re-spawn the
-  debugger with the same bug brief and a note that the previous attempt
-  was incomplete. Excuses like "this is complex" or "can be done in a
-  follow-up" are not acceptable — the task was scoped specifically for
-  the debugger.
-
-## Bash rules
-
-These apply to you (the orchestrator) and all agents you spawn.
-
-- Do not chain Bash commands with `&&` or `;` — run each command as a
-  separate Bash call so failures are visible. Piping output to another
-  command (e.g. `cmd | grep`) is fine.
-
-**You MUST include the following block verbatim in the prompt of every
-agent you spawn** (debugger, reviewer — no exceptions):
-
-> **Bash rules — follow these exactly:**
-> - Do not chain Bash commands with `&&` or `;` — run each command as a
->   separate Bash call so failures are visible. Piping output to another
->   command (e.g. `cmd | grep`) is fine.
-> - Do not prefix commands with `cd <path> &&` or `cd <path>;`. The
->   working directory persists between Bash calls. If you need to change
->   directory, run `cd` as its own separate Bash call.
+- **NEVER merge anything into main or master.** All work happens on debug branches. The user merges to main themselves.
+- **NEVER skip the Observations step.** You MUST spawn Explore agents to gather observed facts before invoking the debugger.
+- **NEVER write or edit code yourself.** All code changes go through the debugger agent.
+- **NEVER accept a deferral of the reproduction task.** If the debugger's summary indicates the reproduction was skipped, deferred, or only partially done — treat it as a blocking issue. Re-spawn the debugger with a note that the previous attempt was incomplete.
 
 ## Progress tracking
 
 Use `TaskCreate` and `TaskUpdate` to give the user real-time visibility
 into the pipeline. Only the orchestrator calls these — agents do not.
 
-Tasks are displayed in creation order, so create them just-in-time to
-keep the list intuitive.
+Tasks are displayed in creation order, so create them just-in-time.
 
 ### Early pipeline tasks (create before Step 1)
 
 Create these 4 tasks using `TaskCreate` at the very start:
 
 1. **Set up workspace** — activeForm: `Setting up workspace`
-2. **Understand the bug** — activeForm: `Gathering bug context`
-3. **Reproduce the bug** — activeForm: `Creating minimal reproduction`
+2. **Gather observations** — activeForm: `Gathering observations`
+3. **Run structured debug** — activeForm: `Running structured debug`
    — blockedBy: task 2
-4. **Review reproduction** — activeForm: `Reviewing reproduction quality`
+4. **Review reproduction** — activeForm: `Reviewing reproduction`
    — blockedBy: task 3
 
 ## Pipeline
@@ -92,133 +57,122 @@ Create these 4 tasks using `TaskCreate` at the very start:
 
 Mark the Setup task as `in_progress`.
 
-First, check whether you are already inside a separate worktree by
-running:
+Check whether you are already inside a separate worktree:
 
     git rev-parse --show-toplevel
 
-and comparing it with:
+Compare with:
 
     git worktree list
 
-If the current working directory is inside a **non-main worktree** (i.e.
-not the bare repo or the primary working tree) and the branch is clean
-(`git status` shows no uncommitted changes), then **skip worktree
-creation** — just use the current worktree as-is.
+If the current working directory is inside a **non-main worktree** and
+the branch is clean (`git status` shows no uncommitted changes), skip
+worktree creation — use the current worktree as-is.
 
-Record these values:
+Record:
 - `BASE_BRANCH`: `main` (or `master` if that's the default branch)
 - `DEBUG_BRANCH`: the current branch name
 
-If you are on main or master (i.e. in the primary working tree), create
-a worktree with a descriptive branch name derived from the bug
-description (e.g. `debug/null-pointer-on-login`,
-`debug/cache-key-collision`):
+If you are on main or master, create a worktree with a descriptive
+branch name derived from the bug description:
 
     git worktree add .zuggie/<branch-name> -b <branch-name>
     cd .zuggie/<branch-name>
 
-Record these values:
+Record:
 - `BASE_BRANCH`: the branch you were on before creating the worktree
-  (e.g. `main`)
-- `DEBUG_BRANCH`: the new branch name (e.g. `debug/null-pointer-on-login`)
+- `DEBUG_BRANCH`: the new branch name
 
-All subsequent steps run inside the worktree (whether reused or newly
-created).
+All subsequent steps run inside the worktree.
 
 Mark the Setup task as `completed`.
 
-### Step 1a — Understand the bug
+### Step 2 — Observations
 
-Mark the Understand task as `in_progress`.
+Mark the Gather observations task as `in_progress`.
 
-Before spawning the debugger, gather lightweight context so it starts
-with a clear picture instead of exploring from scratch.
+Spawn one or more **Explore** agents to collect **observed facts only** — no theories:
+- What the user reports (symptom, environment, reproduction steps if given)
+- Where the symptom surfaces in code (entry point, call stack area)
+- Recent changes in that area (`git log` on the affected files)
+- Existing tests that exercise that area
 
-Spawn one or more **Explore** agents (`subagent_type: Explore`) with
-targeted questions about the codebase:
-- Find the code area the bug report references (files, functions,
-  modules)
-- Identify existing test patterns (test framework, test file locations,
-  run command)
-- Understand expected vs. reported behavior in code terms
-- Find related existing tests as reference for style and conventions
+Synthesize into an **Observation Brief** — strictly factual, no hypotheses.
+Write it to `.zuggie/<DEBUG_BRANCH>/observation-brief.md`.
 
-Synthesize the exploration findings into a **Bug Brief** to pass to the
-debugger:
-- Bug description (verbatim from user input)
-- Affected code area (files, functions, modules)
-- Expected vs. actual behavior
-- Existing test patterns (framework, conventions, run command)
-- Related existing tests (as style reference)
+Pass the file path forward — do not inline the content.
 
-**Do NOT explore the codebase yourself** (no Glob, Grep, or Read calls
-to understand the code). Delegate to Explore agents instead.
+Mark the Gather observations task as `completed`.
 
-Mark the Understand task as `completed`.
+### Step 3–5 — Debugger (hypothesize + bisect + minimize + explain)
 
-### Step 2 — Reproduce the bug
-
-Mark the Reproduce task as `in_progress`.
+Mark the Run structured debug task as `in_progress`.
 
 Spawn `zuggie:zuggie-debugger` with:
-- The Bug Brief from Step 1a
+- Path to the Observation Brief file
 - The worktree path (absolute path to `.zuggie/<DEBUG_BRANCH>`)
 - The branch name (`DEBUG_BRANCH`)
-- The bash rules block (verbatim, as specified in the Bash rules section)
+- Directive: maintain and return a **hypothesis ledger** with entries
+  `{id, statement, prediction, test, result, status}`, status ∈
+  `{pending, supported, refuted}`. Minimum 2 hypotheses must be
+  considered — even if the first seems obvious. The ledger is a
+  required output.
 
-Wait for the debugger's Reproduction Summary. If the summary indicates
-the reproduction was skipped, deferred, or only partially done — treat
-it as a blocking issue and re-spawn the debugger. Include the previous
-attempt's summary and a note that reproduction is non-negotiable.
+Wait for the debugger's Reproduction Summary. The summary must include:
+- A hypothesis ledger with at least 2 entries, each marked supported or refuted
+- A bisect result (commit range or "not a regression")
+- A causal mechanism statement in 1–2 sentences
+
+**Mechanism gate:** "It fails when X is called" is not a mechanism.
+"When X is called with Y not yet initialized, Z reads stale cache and
+returns nil" is. If the returned summary lacks a causal mechanism
+statement, re-spawn the debugger with feedback that the mechanism is
+missing or descriptive rather than causal.
+
+If the summary indicates the reproduction was skipped, deferred, or
+only partially done — treat it as a blocking issue and re-spawn.
 
 If the debugger reports a genuine blocker (e.g. missing dependency,
-broken environment) after systematic investigation, surface the findings
-to the user and stop.
+broken environment) after systematic investigation, surface it to the
+user and stop.
 
-Mark the Reproduce task as `completed`.
+Mark the Run structured debug task as `completed`.
 
-### Step 3 — Review reproduction
+### Step 6 — Review reproduction
 
-Mark the Review task as `in_progress`.
+Mark the Review reproduction task as `in_progress`.
 
 Spawn `zuggie:zuggie-reviewer` with:
-- A preamble explaining that this is a **reproduction review**, not an
-  implementation review. The reviewer should treat the Bug Brief as the
-  "plan" and the Reproduction Summary as the "engineer summary". Plan
-  completeness means: does the reproduction cover the reported bug?
-- The original bug description
-- The Bug Brief from Step 1a (framed as the plan)
-- The debugger's Reproduction Summary (framed as the engineer summary)
-- Output of `git diff <BASE_BRANCH>...HEAD` on the debug branch
-- The worktree path so the reviewer reads files from the correct branch
-
-The reviewer evaluates:
-- Does it actually demonstrate the reported bug?
-- Is it minimal (no unnecessary setup or code)?
-- Is it self-contained?
-- Does it follow project test conventions?
+- A note: this is a **reproduction review**. Treat the Observation Brief
+  as the plan, and the Reproduction Summary as the engineer summary.
+- Path to the Observation Brief file (`.zuggie/<DEBUG_BRANCH>/observation-brief.md`)
+- Debugger's Reproduction Summary (includes hypothesis ledger, bisect result, mechanism)
+- Git diff: `git diff <BASE_BRANCH>...HEAD` on the debug branch
+- Worktree path
+- Evaluation criteria (include verbatim in the reviewer prompt):
+  - Observation Brief is factual (no smuggled hypotheses)
+  - Hypothesis ledger has real alternatives, not strawmen
+  - Reproduction is minimal
+  - Mechanism statement is causal, not merely descriptive
 
 Triage the review verdict:
 - **Blocking**: re-spawn `zuggie:zuggie-debugger` with the reviewer's
-  specific feedback, the original Bug Brief, and the worktree details.
+  specific feedback, the original Observation Brief path, and the
+  worktree details.
 - **Minor/nit**: defer unless the fix is trivial.
 - Only re-review if the reviewer's verdict was "request changes".
 
-Mark the Review task as `completed`.
+Mark the Review reproduction task as `completed`.
 
-### Step 4 — Report + optional fix handoff
+### Step 7 — Report + optional fix handoff
 
-Present to the user:
-- Reproduction file(s) and the exact command to run them
-- What the reproduction demonstrates (expected vs. actual behavior)
-- Key findings from the investigation (bug mechanism, affected area)
-- Reviewer verdict
+**Repro file(s):** <paths, relative to repo root>
+**Run command:** <exact command>
+**Mechanism:** <one-line bug cause>
+**Reviewer verdict:** <verdict>
+**Deferred issues:** <none, or bullet list>
 
-Then ask: **"Would you like to fix this bug using the zuggie workflow?"**
+Ask: **"Would you like to fix this bug using the zuggie workflow?"**
 
-- If yes: tell the user to run `/zuggie` with the bug description,
-  reproduction file path, and investigation findings as context. The
-  reproduction serves as both the spec and the verification test — the
-  fix should make the failing test/harness pass.
+- If yes: instruct the user to run `/zuggie` passing the bug description, repro file path, and branch name. The repro is the verification test.
 - If no: done.

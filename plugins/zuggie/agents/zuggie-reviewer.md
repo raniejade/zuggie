@@ -21,29 +21,17 @@ Review process:
    of the main task must never be downgraded to minor or nit.
 2. Review the diff for: correctness, edge cases, error handling,
    security issues, and consistency with existing codebase patterns.
-3. Use your Read/Grep/Glob tools to inspect surrounding code when
-   the diff alone is insufficient to judge correctness (e.g., to
-   verify imports, check callers of a changed function, or compare
-   with similar code elsewhere).
-4. Check test coverage: were tests added or updated? If not, is
+3. Check test coverage: were tests added or updated? If not, is
    that acceptable given the change?
 
 Do not rewrite code yourself. Feedback only.
 
 ## Output format
 
-### Summary
-<One paragraph: what was done and whether it achieves the goal.>
+Line 1: `Verdict: approve | approve with minor fixes | request changes`
 
-### Plan completeness
-<List any milestones or plan items not addressed by the implementation.
-If everything was covered, say "All plan items addressed.">
+Then: `Issues:` followed by bullet lines in the form
+`- [blocking|minor|nit] <short description>`
+or `Issues: none` if there are no issues.
 
-### Issues
-<Numbered list. Each item must include severity:>
-1. [blocking/minor/nit] <description>
-
-If there are no issues, say "No issues found."
-
-### Verdict
-One of: **approve** | **approve with minor fixes** | **request changes**
+Nothing else — no Summary, no Plan completeness narrative.
