@@ -127,7 +127,10 @@ a worktree with a descriptive branch name (e.g. `feature/auth-refresh`,
 `fix/null-check`):
 
     git worktree add .zuggie/<branch-name> -b <branch-name>
-    cd .zuggie/<branch-name>
+
+Then call `EnterWorktree` with `path: .zuggie/<branch-name>` to switch
+the session into the new worktree. The orchestrator uses `EnterWorktree(path: …)`
+for all worktree switches after creation — never raw `cd`.
 
 Record these values:
 - `BASE_BRANCH`: the branch you were on before creating the worktree
@@ -255,8 +258,9 @@ concurrently.
 
 **Dependent milestones**: after the dependency's cycle completes:
 1. Merge the dependency's branch into the **feature branch** (NOT main):
-   `cd` to the feature worktree, then
-   `git merge <FEATURE_BRANCH>-ms-<dep> --no-edit`
+   Call `ExitWorktree(action: "keep")` to leave the current sub-worktree,
+   then `EnterWorktree(path: .zuggie/<FEATURE_BRANCH>)` to enter the feature
+   worktree, then run `git merge <FEATURE_BRANCH>-ms-<dep> --no-edit`.
 2. Create the dependent milestone's worktree:
    `git worktree add .zuggie/<FEATURE_BRANCH>-ms-<N> -b <FEATURE_BRANCH>-ms-<N> <FEATURE_BRANCH>`
 3. Launch the dependent milestone's implement-review-triage cycle.
@@ -272,14 +276,18 @@ the task update.
 
 Only if sub-worktrees were created:
 
-a. `cd` into the feature worktree.
+a. Call `ExitWorktree(action: "keep")` if currently inside a sub-worktree,
+   then call `EnterWorktree(path: .zuggie/<FEATURE_BRANCH>)` to enter the
+   feature worktree.
 b. For each milestone branch not yet merged:
    `git merge <FEATURE_BRANCH>-ms-<N> --no-edit`
    **Target is always the FEATURE_BRANCH, never main/master.**
 c. If a merge produces conflicts:
    - `git merge --abort`
    - Spawn `zuggie:zuggie-engineer` in the feature worktree to manually
-     apply and resolve the changes. Provide:
+     apply and resolve the changes. Ensure the feature worktree is entered
+     via `EnterWorktree(path: .zuggie/<FEATURE_BRANCH>)` before spawning.
+     Provide:
      - The diff: `git diff <FEATURE_BRANCH>...<FEATURE_BRANCH>-ms-<N>`
      - The list of conflicting files
      - The milestone description
