@@ -77,7 +77,9 @@ If you are on main or master, create a worktree with a descriptive
 branch name derived from the bug description:
 
     git worktree add .zuggie/<branch-name> -b <branch-name>
-    cd .zuggie/<branch-name>
+
+Then call `EnterWorktree` with `path: .zuggie/<branch-name>` to switch
+the session into the new worktree.
 
 Record:
 - `BASE_BRANCH`: the branch you were on before creating the worktree
