@@ -24,7 +24,7 @@ done
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SKILLS_SRC="$ROOT/codex/skills"
 AGENTS_SRC="$ROOT/codex/agents"
-SKILLS_DST="$HOME/.agents/skills"
+SKILLS_DST="$HOME/.codex/skills"
 AGENTS_DST="$HOME/.codex/agents"
 STATE_DIR="$HOME/.codex/zuggie"
 STATE_FILE="$STATE_DIR/install-manifest.txt"
