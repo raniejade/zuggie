@@ -1,6 +1,6 @@
 name = "zuggie-reviewer"
 description = "Reviewer for zuggie milestone and final diffs."
-model = "gpt-5.4"
+model = "gpt-5.3-codex"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """
