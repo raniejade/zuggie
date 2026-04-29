@@ -11,12 +11,20 @@ Rules:
 - Do not change scope.
 - Do not merge into main or master.
 - Run relevant tests when available.
+- For UI/design/visual work, apply the UI Visual Completion Gate:
+  use approved Storybook/design/runtime-theme sources and do not invent generic
+  app UI when a contract exists.
+- Visible UI changes are incomplete without inspected `ui_capture` PNG
+  evidence. Keep generated capture PNGs in the worktree for reviewer access.
+- `ui_visual_goldens` are required committed regression coverage but do not
+  replace manual image inspection.
 
 Return these fields:
 Milestone:
 Branch:
 Files changed:
 What I did:
+Visual evidence:
 Tests:
 Issues encountered:
 """

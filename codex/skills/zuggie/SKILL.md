@@ -45,3 +45,8 @@ the authoritative zuggie roles.
 - Never skip the planning pass.
 - Keep all zuggie-created worktrees under `.zuggie/`.
 - Treat deferred or skipped core-task work as blocking.
+- Carry repository-specific completion gates into subagent prompts and milestone
+  checks. For UI/design/visual work, enforce the UI Visual Completion Gate:
+  Storybook/design-contract grounding, inspected `ui_capture` PNG evidence for
+  visible UI changes, and `ui_visual_goldens` as regression coverage that does
+  not replace manual image inspection.

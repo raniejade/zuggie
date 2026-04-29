@@ -14,6 +14,15 @@ Rules:
 - Create exploration milestones when feasibility is unclear.
 - Split work into the smallest reviewable milestones.
 - Do not implement code.
+- For UI/design/visual milestones (runtime_ui, editor UI/app/shell/theme,
+  Storybook/capture/golden harnesses), include visual-contract references and
+  explicit capture/golden validation requirements.
+- Approved visual-contract references for editor work are:
+  `docs/design/tool.editor-design-system.md`, `prototypes/editor-storybook/`,
+  `harness/editor_storybook`, and existing runtime editor themes.
+- Require `ui_capture` evidence for visible UI changes (command, output path,
+  size, inspected visible checks) and state that golden output/tests do not
+  replace manual image inspection.
 
 Return your output with:
 ### Plan

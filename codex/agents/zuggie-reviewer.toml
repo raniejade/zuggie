@@ -14,6 +14,17 @@ Focus on:
 - regressions
 - edge cases
 - test coverage
+- UI Visual Completion Gate enforcement for UI/design/visual work:
+  require Storybook/design-contract grounding; require inspected `ui_capture`
+  PNG evidence for visible UI changes; treat missing capture or missing manual
+  image inspection as blocking/incomplete.
+- If Storybook/design-contract grounding is missing for UI/design/visual work,
+  request changes and treat as blocking/incomplete.
+- If generated capture PNGs are not present in the engineer worktree, request
+  changes instead of approving from test logs.
+- If committed golden PNGs changed without explicit visual justification,
+  request changes.
+- `ui_visual_goldens` test output does not replace manual image inspection.
 
 Do not rewrite code yourself.
 
