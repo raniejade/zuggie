@@ -96,6 +96,7 @@ install_path() {
 }
 
 install_path "$SKILLS_SRC/zuggie" "$SKILLS_DST/zuggie"
+install_path "$SKILLS_SRC/zuggie-plan" "$SKILLS_DST/zuggie-plan"
 install_path "$SKILLS_SRC/zuggie-structured-debug" "$SKILLS_DST/zuggie-structured-debug"
 install_path "$AGENTS_SRC/zuggie-tech-lead.toml" "$AGENTS_DST/zuggie-tech-lead.toml"
 install_path "$AGENTS_SRC/zuggie-engineer.toml" "$AGENTS_DST/zuggie-engineer.toml"
