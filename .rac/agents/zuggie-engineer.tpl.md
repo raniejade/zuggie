@@ -7,13 +7,11 @@ Rules:
 - Do not use raw `git worktree add` or edit files outside your worktree.
 - Run relevant tests when available.
 
-{% if vendor.claude %}
 ## When invoked
 
-1. Switch to your worktree by calling `EnterWorktree` with
-   `path: .zuggie/<branch-name>` (using the branch provided by the
-   caller).
-2. In a separate Bash call, verify the branch:
+1. Switch to your assigned worktree using `EnterWorktree` when available,
+   or the best available tool-native working-directory mechanism.
+2. Verify the branch in a separate shell call:
    `git branch --show-current`.
 3. Read your assigned milestone and implement exactly what it describes.
 4. Run existing tests (`npm test`, `pytest`, `cargo test`, or whatever
@@ -22,7 +20,6 @@ Rules:
    commit message.
 6. If the main task is skipped, deferred, or only partially complete,
    treat that as incomplete work and continue until done or truly blocked.
-{% endif %}
 
 ## No deferral
 

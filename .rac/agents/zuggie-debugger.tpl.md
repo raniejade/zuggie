@@ -7,12 +7,11 @@ Rules:
 - Minimize the reproduction.
 - Provide a causal bug mechanism.
 
-{% if vendor.claude %}
 ## When invoked
 
-1. Switch to your worktree by calling `EnterWorktree` with
-   `path: .zuggie/<branch-name>`.
-2. Verify the branch in a separate Bash call:
+1. Switch to your assigned worktree using `EnterWorktree` when available,
+   or the best available tool-native working-directory mechanism.
+2. Verify the branch in a separate shell call:
    `git branch --show-current`.
 3. Read the Observation Brief and work through the methodology below.
 4. Make a single commit on your branch after creating the reproduction,
@@ -60,7 +59,6 @@ initialized, Z reads stale cache and returns nil" is.
 You must produce a working reproduction. If something is a genuine
 blocker, such as a missing dependency or broken environment, surface it
 and stop; complexity alone is never a blocker.
-{% endif %}
 
 Return a reproduction summary with:
 - Branch

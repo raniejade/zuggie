@@ -4,7 +4,6 @@ description = "Structured debugging workflow using zuggie's dedicated debugger a
 version = "1.0.0"
 +++
 
-{% if vendor.claude %}
 Run the structured debug pipeline: observe, hypothesize, bisect,
 minimize, explain, review, and optionally hand off to the fix workflow.
 
@@ -12,7 +11,7 @@ Usage: /zuggie-structured-debug <bug description>
 
 ## Your role
 
-You are the **orchestrator**. You coordinate the pipeline by spawning
+You are the orchestrator. You coordinate the pipeline by spawning
 agents and managing git branches. You do NOT:
 - Write or edit application code yourself
 - Skip steps because you think you already know the answer
@@ -31,13 +30,13 @@ Spawn explorer-style agents for all codebase recon.
 
 ## Hard rules
 
-- **NEVER merge anything into main or master.** All work happens on
+- NEVER merge anything into main or master. All work happens on
   debug branches. The user merges to main themselves.
-- **NEVER skip the Observations step.** You MUST gather observed facts
+- NEVER skip the Observations step. You MUST gather observed facts
   before invoking the debugger.
-- **NEVER write or edit code yourself.** All reproduction code changes
+- NEVER write or edit code yourself. All reproduction code changes
   go through the debugger agent.
-- **NEVER accept deferral of the reproduction task.** If reproduction
+- NEVER accept deferral of the reproduction task. If reproduction
   was skipped, deferred, or partially done, re-spawn the debugger.
 
 ## Progress tracking
@@ -46,17 +45,18 @@ Use the tool-native task/progress tracking surface when available. Only
 the orchestrator updates progress; agents do not.
 
 Create these early tasks before Step 1:
-1. **Set up workspace**
-2. **Gather observations**
-3. **Run structured debug**, blocked by observations
-4. **Review reproduction**, blocked by structured debug
+1. Set up workspace
+2. Gather observations
+3. Run structured debug, blocked by observations
+4. Review reproduction, blocked by structured debug
 
 ## Worktree tooling rule
 
-After creating or selecting a worktree, call `EnterWorktree(path: ...)`.
-If `EnterWorktree` is unavailable, use the best available tool-native
-working-directory mechanism and explicitly report that limitation. Do
-not pretend the worktree switch happened.
+After creating or selecting a worktree, switch into it. If
+`EnterWorktree(path: ...)` is available, call it. If `EnterWorktree` is
+unavailable, use the best available tool-native working-directory
+mechanism and explicitly report that limitation. Do not pretend the
+worktree switch happened.
 
 ## Pipeline
 
@@ -139,29 +139,3 @@ Report:
 - Deferred non-blocking issues
 
 Ask whether the user wants to fix the bug using the zuggie workflow.
-
-{% elsif vendor.codex %}
-Run the structured debug workflow using the installed Codex subagents.
-
-## Required subagents
-
-Use these installed custom subagents by name:
-- `zuggie-debugger`
-- `zuggie-reviewer`
-
-## Workflow
-
-1. Create or reuse a clean `.zuggie/<branch>` debug worktree.
-2. Gather observed facts first.
-3. Spawn `zuggie-debugger` to reproduce and explain the bug.
-4. Require a hypothesis ledger, minimized reproduction, and causal
-   mechanism.
-5. Spawn `zuggie-reviewer` to review the reproduction output.
-6. Report the reproduction branch, run command, and bug mechanism.
-
-## Rules
-
-- Do not turn the debug workflow into a fix workflow unless the user
-  explicitly asks for that next.
-- Keep observations factual before the debugger starts theorizing.
-{% endif %}
