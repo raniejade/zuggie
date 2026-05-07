@@ -1,0 +1,13 @@
+id = "zuggie-tech-lead"
+name = "zuggie-tech-lead"
+description = "Planning-only agent for the zuggie workflow."
+instructions = "./zuggie-tech-lead.tpl.md"
+
+[vendor.codex.config]
+model = "gpt-5.3-codex"
+model_reasoning_effort = "high"
+sandbox_mode = "read-only"
+
+[vendor.claude.config]
+model = "sonnet"
+tools = ["Read", "Grep", "Glob", "Bash", "EnterWorktree"]

@@ -1,59 +1,50 @@
-# Zuggie
+# Zuggie RAC Config Pack
 
-A Claude Code plugin for structured development workflow. Non-trivial
-work gets a dedicated worktree, a tech-lead plan, parallel engineer
-implementation, and a reviewer pass — all from a single command.
+Zuggie is now distributed as a RAC shared config pack.
 
-## Usage
+## Install
 
-    /zuggie <task description>
+```bash
+rac pack add zuggie github:raniejade/zuggie --ref <ref>
+rac install --target claude,codex --kind agent,skill
+```
 
-This runs a three-stage pipeline:
+## Supported targets
 
-1. zuggie-tech-lead (opus) — plans the work and identifies parallel milestones
-2. zuggie-engineer (sonnet) — one per milestone, spawned in parallel where possible
-3. zuggie-reviewer (opus) — reviews the diff, zuggie triages issues and fixes blockers
+- `claude`
+- `codex`
 
-## Installation
+## Supported kinds
 
-    /plugin marketplace add raniejade/zuggie
-    /plugin install zuggie@zuggie
+- `agent`
+- `skill`
 
-## Permissions
+## Source of truth
 
-Zuggie auto-approves Edit, Write, and Bash tool calls when the working
-directory is inside a zuggie worktree (`.claude/zuggie/<branch>`). This
-prevents sub-agents from prompting for permission on every operation.
+All generated vendor config now comes from `.rac/` in this repository:
 
-Outside a worktree, normal permission flow applies. Edits to files
-outside the active worktree are blocked, and git add/commit on
-main/master is always blocked.
+- `.rac/config.toml`
+- `.rac/agents/*.toml`
+- `.rac/agents/*.tpl.md`
+- `.rac/skills/*/SKILL.tpl.md`
 
-## Customisation
+## Generated output locations
 
-### Agent models
+`rac install --target claude,codex --kind agent,skill` generates into standard vendor locations in the target project:
 
-Defaults:
-- zuggie-tech-lead — opus
-- zuggie-engineer — sonnet
-- zuggie-reviewer — opus
+- Claude agents/skills under `.claude/`
+- Codex agents under `.codex/agents/`
+- Codex skills under `.agents/skills/`
 
-To override, create .claude/agents/zuggie-<role>.md in your project
-with the same name field (e.g. name: zuggie-engineer) and your
-preferred model. The local file takes precedence over the plugin.
-The name field must match exactly for the override to take effect.
+## Validation workflow
 
-### Agent behaviour
+Use RAC structural validation commands:
 
-Same mechanism — shadow any agent file to change its system prompt,
-restrict its tools, or adjust instructions for your team's conventions.
+```bash
+npx github:raniejade/rac doctor --target claude,codex --kind agent,skill
+npx github:raniejade/rac install --target claude,codex --kind agent,skill --dry-run
+```
 
-### Disabling the plugin for a project
+## Cutover policy
 
-Add to .claude/settings.local.json:
-
-    {
-      "enabledPlugins": {
-        "zuggie@zuggie": false
-      }
-    }
+This repository has a hard cutover to RAC packaging. Legacy plugin-era and direct Codex packaging surfaces were removed with no compatibility layer.
