@@ -1,11 +1,8 @@
----
-name: zuggie-plan
-description: >
-  Planning-only zuggie role for creating or revising implementation plans.
-  Trigger when the user asks for a plan, plan revision, milestone breakdown,
-  or scope clarification before coding.
-version: 1.0.0
----
++++
+description = "Planning-only zuggie role for creating or revising implementation plans."
+[vendor.claude.frontmatter]
+version = "1.0.0"
++++
 
 Run a planning-only workflow. Do not implement code changes.
 
@@ -80,8 +77,16 @@ Only allow staged compatibility when the user explicitly requests it.
 
 ## Output format
 
+{% if vendor.codex %}
+Final responses must be wrapped in XML tags:
+
+`<proposed_plan>...</proposed_plan>`
+
+Inside the wrapper, include these sections exactly:
+{% elsif vendor.claude %}
 Final responses must be Claude-native markdown (no Codex XML wrapper).
 Include these sections exactly:
+{% endif %}
 
 - `# Title`
 - `## Summary`
