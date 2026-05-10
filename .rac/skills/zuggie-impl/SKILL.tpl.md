@@ -1,12 +1,12 @@
 +++
-description = "Full planning, implementation, and review pipeline using zuggie agents."
+description = "Implement and review a change end-to-end. Breaks work into milestones, implements them, and reviews. For spec-only work, use `zuggie-spec`."
 [vendor.claude.frontmatter]
 version = "1.0.0"
 +++
 
-Run the full planning, implementation, and review pipeline.
+Run the full implementation and review pipeline.
 
-Usage: /zuggie <task description>
+Usage: /zuggie-impl <task description>
 
 ## Your role
 
