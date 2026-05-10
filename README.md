@@ -4,10 +4,10 @@ Structured planning, implementation, and review pipeline for Claude Code and Cod
 
 ## What you get
 
-- `/zuggie` — Run the full planning, implementation, and review pipeline.
+- `/zuggie` — Full planning, implementation, and review pipeline using zuggie agents.
 - `/zuggie-plan` — Planning-only zuggie role for creating or revising implementation plans.
 - `/zuggie-structured-debug` — Structured debugging workflow using zuggie's dedicated debugger and reviewer subagents.
-  - Agents: `zuggie-tech-lead`, `zuggie-engineer`, `zuggie-reviewer`, `zuggie-debugger`.
+- Agents: `zuggie-tech-lead`, `zuggie-engineer`, `zuggie-reviewer`, `zuggie-debugger`.
 
 ## Prerequisites
 
@@ -42,8 +42,8 @@ rac install --target claude,codex --kind agent,skill
 ## Validation
 
 ```bash
-npx github:raniejade/rac doctor --target claude,codex --kind agent,skill
-npx github:raniejade/rac install --target claude,codex --kind agent,skill --dry-run
+npx -y github:raniejade/rac doctor --target claude,codex --kind agent,skill
+npx -y github:raniejade/rac install --target claude,codex --kind agent,skill --dry-run
 ```
 
 CI runs these same checks on every PR and push to main.
