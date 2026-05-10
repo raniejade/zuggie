@@ -1,6 +1,6 @@
 id = "zuggie-engineer"
 name = "zuggie-engineer"
-description = "Implementation agent for one zuggie milestone."
+description = "Implementation agent for one zuggie-impl milestone."
 instructions = "./zuggie-engineer.tpl.md"
 
 [vendor.codex.config]
