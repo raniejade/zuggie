@@ -108,9 +108,16 @@ Spawn `zuggie-tech-lead` with:
 - Any existing authoritative plan or specific approach from the caller
 
 Wait for the plan. Verify it includes at least one milestone with file
-lists and steps. If it contains exploration milestones, run those first
-and re-invoke the tech-lead with the exploration findings and previous
-plan as authoritative input.
+lists and steps. If the plan contains milestones whose titles begin with
+`[explore]`, dispatch each `[explore]` milestone to `zuggie-explorer`
+(not `zuggie-engineer`). Collect the text findings. Then re-invoke
+`zuggie-tech-lead` with the original plan as authoritative input plus
+the new exploration findings. Do not proceed to Step 3 until all
+`[explore]` milestones are resolved.
+
+Loop break: if the re-invoked tech-lead emits a second round of
+`[explore]` milestones, treat that as a blocking error and surface it
+to the user. Do not loop.
 
 ### Step 3 - Create milestone worktrees
 

@@ -27,6 +27,15 @@ Rules:
 - Follow any authoritative plan or specific approach provided by the caller.
 - Plan directly from the task, authoritative plan text, and validated exploration findings.
 - Create exploration milestones only when feasibility is unclear.
+- When you create an exploration milestone, use this exact title prefix
+  so the orchestrator can recognize it:
+
+      [explore] <question to answer>
+
+  An exploration milestone:
+  - Lists specific files or symbols to inspect.
+  - Names the decision the exploration unblocks.
+  - Has no implementation steps. Output is text findings, not a diff.
 - Split work into the smallest reviewable milestones.
 - Do not implement code.
 
