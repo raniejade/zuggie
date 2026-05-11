@@ -21,12 +21,13 @@ sub-agent and wait for its real output. Do not simulate the agent's work
 or summarize what you think it would produce.
 
 When you need to understand the codebase before planning or during
-triage, spawn explorer-style agents rather than reading the full surface
-yourself. Keep exploration prompts focused and use multiple explorers
-in parallel when the questions are independent.
+triage, spawn `zuggie-explorer` agents rather than reading the full surface
+yourself. Keep exploration prompts focused and run multiple `zuggie-explorer`
+agents in parallel when the questions are independent.
 
 ## Required subagents
 
+- `zuggie-explorer`
 - `zuggie-tech-lead`
 - `zuggie-engineer`
 - `zuggie-reviewer`
@@ -94,7 +95,7 @@ Enter the feature worktree using the worktree tooling rule above.
 ### Step 1a - Pre-planning recon
 
 Gather lightweight codebase context before planning. Spawn focused
-explorer-style agents for questions such as related files, existing
+`zuggie-explorer` agents for questions such as related files, existing
 patterns, or unclear APIs. Pass the synthesized findings to the
 tech-lead; do not dump raw explorer output.
 
@@ -107,9 +108,16 @@ Spawn `zuggie-tech-lead` with:
 - Any existing authoritative plan or specific approach from the caller
 
 Wait for the plan. Verify it includes at least one milestone with file
-lists and steps. If it contains exploration milestones, run those first
-and re-invoke the tech-lead with the exploration findings and previous
-plan as authoritative input.
+lists and steps. If the plan contains milestones whose titles begin with
+`[explore]`, dispatch each `[explore]` milestone to `zuggie-explorer`
+(not `zuggie-engineer`). Collect the text findings. Then re-invoke
+`zuggie-tech-lead` with the original plan as authoritative input plus
+the new exploration findings. Do not proceed to Step 3 until all
+`[explore]` milestones are resolved.
+
+Loop break: if the re-invoked tech-lead emits a second round of
+`[explore]` milestones, treat that as a blocking error and surface it
+to the user. Do not loop.
 
 ### Step 3 - Create milestone worktrees
 
@@ -134,10 +142,13 @@ For each milestone, run an implement-review-triage cycle:
 2. Spawn `zuggie-reviewer` with the plan, engineer summary, scoped diff,
    and worktree path.
 3. Triage the review:
-   - Blocking issues: re-spawn `zuggie-engineer` in the same worktree
-     with the review issue and relevant files.
-   - Minor/nit issues: defer unless the fix is trivial.
+   - Re-spawn `zuggie-engineer` when **any** `[blocking]` issue is present,
+     regardless of verdict. Pass the blocking issue lines and relevant files.
+   - Defer all `[minor]` issues unless the fix is trivial.
    - Re-review when the verdict was `request changes`.
+   - Fallback: if the reviewer's Issues block contains no `[blocking]` or
+     `[minor]` tags (malformed output), fall back to verdict-only triage
+     (`request changes` → re-spawn; anything else → continue).
 
 Launch independent milestones in parallel when possible. For dependent
 milestones, merge the dependency branch into the feature branch, then
@@ -165,8 +176,9 @@ Spawn `zuggie-reviewer` with:
 - `git diff <BASE_BRANCH>...HEAD`
 - Feature worktree path
 
-Triage final review blocking issues by re-spawning `zuggie-engineer` in
-the feature worktree. Re-review when the verdict was `request changes`.
+Triage final review: re-spawn `zuggie-engineer` when any `[blocking]` line
+is present. Defer `[minor]` issues. Re-review when verdict was
+`request changes`. Fallback to verdict-only triage if tags are absent.
 
 ### Step 7 - Report
 

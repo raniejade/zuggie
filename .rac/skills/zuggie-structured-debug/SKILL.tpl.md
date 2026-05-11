@@ -21,10 +21,11 @@ Every step below that says "spawn" means: invoke the appropriate
 sub-agent and wait for its real output. Do not simulate the agent's
 work.
 
-Spawn explorer-style agents for all codebase recon.
+Spawn `zuggie-explorer` agents for all codebase recon.
 
 ## Required subagents
 
+- `zuggie-explorer`
 - `zuggie-debugger`
 - `zuggie-reviewer`
 
@@ -77,14 +78,21 @@ Enter the debug worktree using the worktree tooling rule above.
 
 ### Step 2 - Observations
 
-Gather observed facts only, with no theories:
-- What the user reports
-- Where the symptom surfaces in code
-- Recent changes in that area
-- Existing tests that exercise that area
+Gather observed facts only, with no theories. Write an Observation Brief
+to `.zuggie/<DEBUG_BRANCH>-observations.md` with exactly these sections:
 
-Synthesize the facts into an Observation Brief and pass the file path
-forward. Do not inline the full brief into later prompts.
+```markdown
+# Observation Brief
+## Reported symptom
+## Surface area (files / entry points)
+## Recent changes (git log -10 of affected paths)
+## Existing tests touching this area
+## Reproduction steps (if known)
+## Out-of-scope / known-good areas
+```
+
+Pass the file path (`.zuggie/<DEBUG_BRANCH>-observations.md`) forward to
+subsequent steps. Do not inline the full brief into later prompts.
 
 ### Step 3-5 - Debugger
 
@@ -124,10 +132,13 @@ Spawn `zuggie-reviewer` with:
   - Mechanism statement is causal
 
 Triage review:
-- Blocking issues: re-spawn `zuggie-debugger` with the specific
-  feedback, original Observation Brief path, and worktree details.
-- Minor/nit issues: defer unless trivial.
+- Re-spawn `zuggie-debugger` when any `[blocking]` line is present. Pass
+  the blocking issue lines, original Observation Brief path, and worktree
+  details.
+- Defer `[minor]` issues unless trivial.
 - Re-review when the verdict was `request changes`.
+- Fallback: if no severity tags are present, fall back to verdict-only
+  triage (`request changes` → re-spawn; anything else → continue).
 
 ### Step 7 - Report and optional fix handoff
 
@@ -138,4 +149,8 @@ Report:
 - Reviewer verdict
 - Deferred non-blocking issues
 
-Ask whether the user wants to fix the bug using the zuggie workflow.
+Print a one-line suggestion the user can run themselves:
+
+  Suggested fix command: /zuggie-impl fix <one-line mechanism> on <DEBUG_BRANCH>
+
+Do not invoke `/zuggie-impl` from this skill. The user decides.

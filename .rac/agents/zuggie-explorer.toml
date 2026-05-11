@@ -1,0 +1,12 @@
+id = "zuggie-explorer"
+name = "zuggie-explorer"
+description = "Read-only codebase recon agent for the zuggie pipeline."
+instructions = "./zuggie-explorer.tpl.md"
+
+[vendor.codex.config]
+model = "gpt-5.4-mini"
+sandbox_mode = "read-only"
+
+[vendor.claude.config]
+model = "haiku"
+tools = ["Read", "Grep", "Glob", "EnterWorktree"]

@@ -13,5 +13,33 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npx -y github:raniejade/rac doctor --target claude,codex --kind agent,skill
-      - run: npx -y github:raniejade/rac install --target claude,codex --kind agent,skill --dry-run
+      # rac CLI pinned to a tagged release; bump intentionally.
+      - run: npx -y github:raniejade/rac#v0.3.0 doctor --target claude,codex --kind agent,skill
+      - run: npx -y github:raniejade/rac#v0.3.0 install --target claude,codex --kind agent,skill --dry-run
+
+  changeset-gate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Require changeset for .rac/ changes
+        run: |
+          base="origin/${{ github.base_ref }}"
+          git fetch origin "${{ github.base_ref }}" --depth=1 >/dev/null 2>&1 || true
+          changed=$(git diff --name-only "$base"...HEAD)
+          rac_changed=$(echo "$changed" | grep -E '^\.rac/' || true)
+          if [ -z "$rac_changed" ]; then
+            echo "No .rac/ changes; gate skipped."
+            exit 0
+          fi
+          added_changeset=$(git diff --name-only --diff-filter=A "$base"...HEAD \
+            | grep -E '^\.changeset/.+\.md$' \
+            | grep -v '^\.changeset/README\.md$' || true)
+          if [ -z "$added_changeset" ]; then
+            echo "::error::PR touches .rac/ but no .changeset/*.md was added."
+            echo "Run 'npx -y @changesets/cli@^2.27 add' and commit the file."
+            exit 1
+          fi
+          echo "Changeset present: $added_changeset"
