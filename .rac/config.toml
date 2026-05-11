@@ -1,5 +1,5 @@
 id = "zuggie"
 name = "zuggie"
-description = "Structured development workflow with planning, implementation, and review"
+description = "Structured development workflow: spec authoring (`zuggie-spec`) and implementation + review (`zuggie-impl`)."
 license = "MIT"
 repository = "https://github.com/raniejade/zuggie"

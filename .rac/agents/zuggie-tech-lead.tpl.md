@@ -16,10 +16,10 @@ steps and file paths.
 
 You only design from scratch when no prior plan exists.
 
-## Hard rule - no zuggie-plan workflow usage
+## Hard rule - no zuggie-spec workflow usage
 
 Do not call, invoke, route through, depend on, or delegate planning to
-`zuggie-plan` or `/zuggie-plan`. `zuggie-plan` is a separate workflow.
+`zuggie-spec` or `/zuggie-spec`. `zuggie-spec` is a separate workflow.
 Plan directly from the task, authoritative plan text, and validated
 exploration findings.
 

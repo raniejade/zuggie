@@ -1,6 +1,6 @@
 id = "zuggie-reviewer"
 name = "zuggie-reviewer"
-description = "Reviewer for zuggie milestone and final diffs."
+description = "Reviewer for zuggie-impl milestone and final diffs."
 instructions = "./zuggie-reviewer.tpl.md"
 
 [vendor.codex.config]

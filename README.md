@@ -4,10 +4,12 @@ Structured planning, implementation, and review pipeline for Claude Code and Cod
 
 ## What you get
 
-- `/zuggie` — Full planning, implementation, and review pipeline using zuggie agents.
-- `/zuggie-plan` — Planning-only zuggie role for creating or revising implementation plans.
+- `/zuggie-impl` — Implement and review a change end-to-end. Breaks work into milestones, implements them, and reviews.
+- `/zuggie-spec` — Build an implementation spec for a change. Spec-only — does not implement code.
 - `/zuggie-structured-debug` — Structured debugging workflow using zuggie's dedicated debugger and reviewer subagents.
 - Agents: `zuggie-tech-lead`, `zuggie-engineer`, `zuggie-reviewer`, `zuggie-debugger`.
+
+`zuggie-spec` answers "what and why" — produces a spec (design artifact). `zuggie-impl` answers "how" — breaks work into milestones, implements them, and reviews. They are independent and can be run standalone in either order.
 
 ## Prerequisites
 
@@ -34,8 +36,8 @@ rac install --target claude,codex --kind agent,skill
 ## Usage
 
 ```
-/zuggie add foo to bar
-/zuggie-plan refactor X
+/zuggie-impl add foo to bar
+/zuggie-spec refactor X
 /zuggie-structured-debug Y fails when Z
 ```
 
