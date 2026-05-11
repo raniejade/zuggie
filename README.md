@@ -23,7 +23,7 @@ rac pack add zuggie github:raniejade/zuggie --ref <ref>
 rac install --target claude,codex --kind agent,skill
 ```
 
-`<ref>` is currently a commit SHA or branch name — no release tag exists yet.
+Use ``--ref v<X.Y.Z>`` for a stable release (e.g. ``--ref v0.1.0``). See [Releases](https://github.com/raniejade/zuggie/releases) for available tags.
 
 ## Generated output locations
 
@@ -49,6 +49,11 @@ npx -y github:raniejade/rac install --target claude,codex --kind agent,skill --d
 ```
 
 CI runs these same checks on every PR and push to main.
+
+## Contributing — changelog entries
+
+Run `npx -y @changesets/cli@^2.27 add` and commit the resulting `.changeset/*.md` file alongside your change.
+Include one for every PR that has a user-visible effect; omit it for pure docs or CI changes.
 
 ## Source of truth
 
