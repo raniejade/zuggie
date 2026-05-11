@@ -77,16 +77,8 @@ Only allow staged compatibility when the user explicitly requests it.
 
 ## Output format
 
-{% if vendor.codex %}
-Final responses must be wrapped in XML tags:
-
-`<proposed_plan>...</proposed_plan>`
-
-Inside the wrapper, include these sections exactly:
-{% elsif vendor.claude %}
-Final responses must be Claude-native markdown (no Codex XML wrapper).
+Final responses must be plain markdown.
 Include these sections exactly:
-{% endif %}
 
 - `# Title`
 - `## Summary`
