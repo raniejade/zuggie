@@ -2,7 +2,7 @@
 "zuggie": minor
 ---
 
-- `zuggie-spec`: output is now plain markdown for all vendors (Claude, Codex, OpenCode). Codex output no longer carries the `<proposed_plan>` XML wrapper; OpenCode output is no longer empty.
+- `zuggie-spec`: output is now plain markdown for all vendors (Claude, Codex, OpenCode); Codex output no longer carries the `<proposed_plan>` XML wrapper, OpenCode output is no longer empty. Output schema expanded to require `## Context`, `## Non-goals`, and `## Risks / Tradeoffs` sections. Initial-spec behavior now prescribes pre-question inspection of `CLAUDE.md`, recent commits, the README, and named files before asking the user anything.
 - `zuggie-reviewer`: output requires a severity tag per issue (`[blocking]` or `[minor]`). Orchestrators now re-spawn on any `[blocking]` line regardless of verdict, with a verdict-only fallback when tags are absent.
 - `zuggie-explorer`: new read-only recon agent shipped in the pack. Available after `rac install` on Claude (`haiku`), Codex (`gpt-5.4-mini`), and OpenCode. Skills now name it explicitly.
 - `zuggie-structured-debug`: Observation Brief has a defined schema written to `.zuggie/<DEBUG_BRANCH>-observations.md`. Step 7 prints a concrete `Suggested fix command: /zuggie-impl fix …` rather than asking the user.
