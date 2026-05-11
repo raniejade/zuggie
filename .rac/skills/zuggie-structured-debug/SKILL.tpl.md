@@ -21,10 +21,11 @@ Every step below that says "spawn" means: invoke the appropriate
 sub-agent and wait for its real output. Do not simulate the agent's
 work.
 
-Spawn explorer-style agents for all codebase recon.
+Spawn `zuggie-explorer` agents for all codebase recon.
 
 ## Required subagents
 
+- `zuggie-explorer`
 - `zuggie-debugger`
 - `zuggie-reviewer`
 

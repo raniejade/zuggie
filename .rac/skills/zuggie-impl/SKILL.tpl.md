@@ -21,12 +21,13 @@ sub-agent and wait for its real output. Do not simulate the agent's work
 or summarize what you think it would produce.
 
 When you need to understand the codebase before planning or during
-triage, spawn explorer-style agents rather than reading the full surface
-yourself. Keep exploration prompts focused and use multiple explorers
-in parallel when the questions are independent.
+triage, spawn `zuggie-explorer` agents rather than reading the full surface
+yourself. Keep exploration prompts focused and run multiple `zuggie-explorer`
+agents in parallel when the questions are independent.
 
 ## Required subagents
 
+- `zuggie-explorer`
 - `zuggie-tech-lead`
 - `zuggie-engineer`
 - `zuggie-reviewer`
@@ -94,7 +95,7 @@ Enter the feature worktree using the worktree tooling rule above.
 ### Step 1a - Pre-planning recon
 
 Gather lightweight codebase context before planning. Spawn focused
-explorer-style agents for questions such as related files, existing
+`zuggie-explorer` agents for questions such as related files, existing
 patterns, or unclear APIs. Pass the synthesized findings to the
 tech-lead; do not dump raw explorer output.
 
