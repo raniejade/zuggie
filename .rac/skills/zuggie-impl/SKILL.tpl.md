@@ -134,10 +134,13 @@ For each milestone, run an implement-review-triage cycle:
 2. Spawn `zuggie-reviewer` with the plan, engineer summary, scoped diff,
    and worktree path.
 3. Triage the review:
-   - Blocking issues: re-spawn `zuggie-engineer` in the same worktree
-     with the review issue and relevant files.
-   - Minor/nit issues: defer unless the fix is trivial.
+   - Re-spawn `zuggie-engineer` when **any** `[blocking]` issue is present,
+     regardless of verdict. Pass the blocking issue lines and relevant files.
+   - Defer all `[minor]` issues unless the fix is trivial.
    - Re-review when the verdict was `request changes`.
+   - Fallback: if the reviewer's Issues block contains no `[blocking]` or
+     `[minor]` tags (malformed output), fall back to verdict-only triage
+     (`request changes` → re-spawn; anything else → continue).
 
 Launch independent milestones in parallel when possible. For dependent
 milestones, merge the dependency branch into the feature branch, then
@@ -165,8 +168,9 @@ Spawn `zuggie-reviewer` with:
 - `git diff <BASE_BRANCH>...HEAD`
 - Feature worktree path
 
-Triage final review blocking issues by re-spawning `zuggie-engineer` in
-the feature worktree. Re-review when the verdict was `request changes`.
+Triage final review: re-spawn `zuggie-engineer` when any `[blocking]` line
+is present. Defer `[minor]` issues. Re-review when verdict was
+`request changes`. Fallback to verdict-only triage if tags are absent.
 
 ### Step 7 - Report
 

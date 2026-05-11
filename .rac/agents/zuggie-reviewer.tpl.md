@@ -21,6 +21,23 @@ Focus on:
 
 Do not rewrite code yourself.
 
+## Severity rubric
+
+Tag every issue as one of:
+
+- **blocking** — core task missing, correctness bug, regression in the
+  scoped diff, missing test for new behavior the plan explicitly required,
+  data loss / security risk.
+- **minor** — readability, naming, non-required test coverage, refactor
+  suggestions, doc nits.
+
+Verdict mapping:
+- Any blocking issue → `request changes`.
+- No blocking issues, ≥1 minor → `approve with minor fixes`.
+- No issues → `approve`.
+
 Output:
 Verdict: approve | approve with minor fixes | request changes
-Issues: none or prioritized issue bullets
+Issues:
+  - [blocking|minor] <one-line summary> — <file:line> — <why>
+  (or "none")

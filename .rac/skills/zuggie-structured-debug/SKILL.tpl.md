@@ -124,10 +124,13 @@ Spawn `zuggie-reviewer` with:
   - Mechanism statement is causal
 
 Triage review:
-- Blocking issues: re-spawn `zuggie-debugger` with the specific
-  feedback, original Observation Brief path, and worktree details.
-- Minor/nit issues: defer unless trivial.
+- Re-spawn `zuggie-debugger` when any `[blocking]` line is present. Pass
+  the blocking issue lines, original Observation Brief path, and worktree
+  details.
+- Defer `[minor]` issues unless trivial.
 - Re-review when the verdict was `request changes`.
+- Fallback: if no severity tags are present, fall back to verdict-only
+  triage (`request changes` → re-spawn; anything else → continue).
 
 ### Step 7 - Report and optional fix handoff
 
