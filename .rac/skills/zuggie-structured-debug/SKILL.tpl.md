@@ -149,4 +149,8 @@ Report:
 - Reviewer verdict
 - Deferred non-blocking issues
 
-Ask whether the user wants to fix the bug using the zuggie workflow.
+Print a one-line suggestion the user can run themselves:
+
+  Suggested fix command: /zuggie-impl fix <one-line mechanism> on <DEBUG_BRANCH>
+
+Do not invoke `/zuggie-impl` from this skill. The user decides.
