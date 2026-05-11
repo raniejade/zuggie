@@ -27,6 +27,18 @@ Read the Observation Brief and the relevant code. List observed facts
 only - no theories. Understand the entry points, data flow, and existing
 tests that touch the affected area.
 
+The Observation Brief uses this schema:
+
+```
+# Observation Brief
+## Reported symptom
+## Surface area (files / entry points)
+## Recent changes (git log -10 of affected paths)
+## Existing tests touching this area
+## Reproduction steps (if known)
+## Out-of-scope / known-good areas
+```
+
 ### Phase 2: Hypothesize
 
 Form and maintain a hypothesis ledger. Each entry:
