@@ -32,15 +32,6 @@ jobs:
           version=$(node -p "require('./package.json').version")
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
-          if [ "$version" = "0.0.0" ]; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "tag_exists=true" >> "$GITHUB_OUTPUT"
-            echo "release_exists=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          echo "skip=false" >> "$GITHUB_OUTPUT"
-
           if git rev-parse "v$version" >/dev/null 2>&1; then
             echo "tag_exists=true" >> "$GITHUB_OUTPUT"
           else
@@ -53,7 +44,7 @@ jobs:
             echo "release_exists=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - if: steps.pending.outputs.count == '0' && steps.version.outputs.skip == 'false' && steps.version.outputs.tag_exists == 'false'
+      - if: steps.pending.outputs.count == '0' && steps.version.outputs.tag_exists == 'false'
         name: Tag and push
         run: |
           git config user.name "github-actions[bot]"
@@ -61,7 +52,7 @@ jobs:
           git tag -a "v${{ steps.version.outputs.version }}" -m "Release v${{ steps.version.outputs.version }}"
           git push origin "v${{ steps.version.outputs.version }}"
 
-      - if: steps.pending.outputs.count == '0' && steps.version.outputs.skip == 'false' && steps.version.outputs.release_exists == 'false'
+      - if: steps.pending.outputs.count == '0' && steps.version.outputs.release_exists == 'false'
         name: Extract changelog section
         run: |
           awk -v v="${{ steps.version.outputs.version }}" '
@@ -73,7 +64,7 @@ jobs:
           ' CHANGELOG.md > release-notes.md
           test -s release-notes.md
 
-      - if: steps.pending.outputs.count == '0' && steps.version.outputs.skip == 'false' && steps.version.outputs.release_exists == 'false'
+      - if: steps.pending.outputs.count == '0' && steps.version.outputs.release_exists == 'false'
         name: Create GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
