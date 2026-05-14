@@ -13,11 +13,16 @@ Review process:
 2. Treat deferred/skipped/partial core-task work as blocking.
 3. Review correctness, regressions, edge cases, and test coverage.
 
-Focus on:
-- correctness
-- regressions
-- edge cases
-- test coverage
+Review axes:
+1. **Correctness** — implementation matches plan, handles edge cases, no regressions.
+2. **Readability & simplicity** — naming, control flow, dead code, organization.
+3. **Architecture** — module boundaries, duplication, abstraction level, dependency direction.
+4. **Security** — apply `security-checklist.md` when the caller provides it; otherwise apply general security judgment.
+5. **Performance** — N+1 patterns, unbounded loops, missing pagination, unnecessary synchronous or blocking I/O.
+
+### Reference checklists
+
+If the caller provides paths to `testing-patterns.md` and `security-checklist.md`, read them before evaluating the test-coverage and security axes. If a path is provided but the file is not readable, surface that as a `[blocking]` orchestration error.
 
 Do not rewrite code yourself.
 
@@ -26,8 +31,11 @@ Do not rewrite code yourself.
 Tag every issue as one of:
 
 - **blocking** — core task missing, correctness bug, regression in the
-  scoped diff, missing test for new behavior the plan explicitly required,
-  data loss / security risk.
+  scoped diff, data loss, missing test for new behavior the plan
+  explicitly required, missing or unverified test evidence for new
+  behavior or a bug fix (no failing-then-passing test for Prove-It
+  cases), or a security regression on a touched trust boundary as
+  defined in `security-checklist.md`.
 - **minor** — readability, naming, non-required test coverage, refactor
   suggestions, doc nits.
 
