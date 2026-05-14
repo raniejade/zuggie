@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="520" viewBox="0 0 1280 520" role="img" aria-labelledby="title desc">
+  <title id="title">Zuggie default workflow from spec to implementation and review</title>
+  <desc id="desc">User request flows to zuggie-spec, producing a decision-ready spec. The user accepts or refines it, then zuggie-impl executes in a worktree with milestones. zuggie-tech-lead plans, zuggie-engineer implements, zuggie-reviewer reviews, and the process ends with a final report and PR-ready branch. zuggie-explorer supports discovery for the spec and implementation planning stages.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .lane { fill: #eef2ff; stroke: #c7d2fe; stroke-width: 1.5; }
+      .node { fill: #ffffff; stroke: #334155; stroke-width: 1.5; rx: 10; ry: 10; }
+      .support { fill: #ecfeff; stroke: #0e7490; stroke-width: 1.5; rx: 10; ry: 10; }
+      .text { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 15px; fill: #0f172a; }
+      .small { font-size: 13px; fill: #334155; }
+      .arrow { stroke: #475569; stroke-width: 2.2; fill: none; marker-end: url(#arrowHead); }
+      .support-arrow { stroke: #0e7490; stroke-width: 2; fill: none; marker-end: url(#supportHead); }
+    </style>
+    <marker id="arrowHead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 z" fill="#475569" />
+    </marker>
+    <marker id="supportHead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 z" fill="#0e7490" />
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1280" height="520" />
+  <rect class="lane" x="36" y="74" width="1208" height="330" />
+
+  <rect class="node" x="56" y="206" width="120" height="64" />
+  <text class="text" x="116" y="244" text-anchor="middle">User request</text>
+
+  <rect class="node" x="210" y="206" width="130" height="64" />
+  <text class="text" x="275" y="244" text-anchor="middle">/zuggie-spec</text>
+
+  <rect class="node" x="372" y="206" width="154" height="64" />
+  <text class="text" x="449" y="236" text-anchor="middle">Decision-ready</text>
+  <text class="text" x="449" y="254" text-anchor="middle">spec</text>
+
+  <rect class="node" x="556" y="196" width="180" height="84" />
+  <text class="text" x="646" y="228" text-anchor="middle">User accepts</text>
+  <text class="text" x="646" y="246" text-anchor="middle">or refines</text>
+
+  <rect class="node" x="770" y="206" width="130" height="64" />
+  <text class="text" x="835" y="244" text-anchor="middle">/zuggie-impl</text>
+
+  <rect class="node" x="930" y="196" width="170" height="84" />
+  <text class="text" x="1015" y="228" text-anchor="middle">Worktree +</text>
+  <text class="text" x="1015" y="246" text-anchor="middle">milestones</text>
+
+  <rect class="node" x="1126" y="98" width="118" height="64" />
+  <text class="text" x="1185" y="136" text-anchor="middle">zuggie-tech-lead</text>
+
+  <rect class="node" x="1126" y="202" width="118" height="64" />
+  <text class="text" x="1185" y="240" text-anchor="middle">zuggie-engineer</text>
+
+  <rect class="node" x="1126" y="306" width="118" height="64" />
+  <text class="text" x="1185" y="344" text-anchor="middle">zuggie-reviewer</text>
+
+  <rect class="node" x="930" y="426" width="314" height="64" />
+  <text class="text" x="1087" y="454" text-anchor="middle">Final report / PR-ready branch</text>
+
+  <rect class="support" x="334" y="426" width="230" height="64" />
+  <text class="text" x="449" y="454" text-anchor="middle">zuggie-explorer</text>
+  <text class="small" x="449" y="472" text-anchor="middle">supporting recon role</text>
+
+  <path class="arrow" d="M176 238 L210 238" />
+  <path class="arrow" d="M340 238 L372 238" />
+  <path class="arrow" d="M526 238 L556 238" />
+  <path class="arrow" d="M736 238 L770 238" />
+  <path class="arrow" d="M900 238 L930 238" />
+  <path class="arrow" d="M1100 238 L1126 238" />
+  <path class="arrow" d="M1185 162 L1185 202" />
+  <path class="arrow" d="M1185 266 L1185 306" />
+  <path class="arrow" d="M1185 370 L1185 426" />
+
+  <path class="support-arrow" d="M449 426 L449 270" />
+  <path class="support-arrow" d="M449 426 C560 390, 650 330, 930 230" />
+</svg>
