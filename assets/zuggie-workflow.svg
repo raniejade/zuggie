@@ -65,7 +65,7 @@
   <path class="arrow" d="M526 238 L556 238" />
   <path class="arrow" d="M736 238 L770 238" />
   <path class="arrow" d="M900 238 L930 238" />
-  <path class="arrow" d="M1100 238 L1126 238" />
+  <path class="arrow" d="M1100 238 L1185 238 L1185 162" />
   <path class="arrow" d="M1185 162 L1185 202" />
   <path class="arrow" d="M1185 266 L1185 306" />
   <path class="arrow" d="M1185 370 L1185 426" />
