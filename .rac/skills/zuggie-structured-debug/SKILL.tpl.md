@@ -125,6 +125,7 @@ Spawn `zuggie-reviewer` with:
 - Debugger reproduction summary
 - `git diff <BASE_BRANCH>...HEAD`
 - Worktree path
+- `testing_patterns_path` — resolved as `.claude/skills/zuggie-impl/references/testing-patterns.md` on Claude, or the equivalent vendor-resolved path. Do not pass `security_checklist_path`; reproduction reviews are excluded from security-axis judgment.
 - Evaluation criteria:
   - Observation Brief is factual
   - Hypothesis ledger has real alternatives

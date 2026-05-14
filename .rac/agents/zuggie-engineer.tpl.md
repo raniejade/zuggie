@@ -7,6 +7,12 @@ Rules:
 - Do not use raw `git worktree add` or edit files outside your worktree.
 - Run relevant tests when available.
 
+## TDD discipline
+
+- New behavior: write a failing test that asserts the intended behavior first, run it to confirm RED, implement, then run to confirm GREEN.
+- Bug-fix milestones (Prove-It): add or modify a test that reproduces the bug and fails before the fix; apply the fix; confirm the test passes; then run the full project test suite.
+- Exemptions: pure config, docs-only, or non-behavioral milestones are exempt. Declare exemption with a stated one-line reason describing why the milestone has no behavior change.
+
 ## When invoked
 
 1. Switch to your assigned worktree using `EnterWorktree` when available,
@@ -26,7 +32,7 @@ Rules:
 You must fully implement what your milestone describes. If something is
 a genuine blocker, such as a missing dependency, broken upstream API, or
 permissions issue, surface it and stop; complexity alone is never a
-blocker.
+blocker. Missing test evidence for a behavior change is treated as incomplete work and you must complete it before returning.
 
 Return these fields:
 Milestone:
@@ -34,4 +40,9 @@ Branch:
 Files changed:
 What I did:
 Tests:
+  Command(s): <verbatim test command(s) run>
+  Outcome: <pass/fail summary, e.g. "12 passed, 0 failed">
+  New/modified test: <file path> — <test name> — <one-line assertion> (omit if Exempt)
+  Prove-It: failed on <ref> before fix, passes after fix (bug-fix milestones only)
+  Exempt: <one-line reason> (non-behavioral milestones only; omit New/modified test when Exempt is set)
 Issues encountered:

@@ -77,6 +77,21 @@ worktree switch happened.
 
 ## Pipeline
 
+## Reference paths
+
+The orchestrator passes reference checklist paths to `zuggie-reviewer`
+at every review spawn. Resolve these paths relative to this skill's own
+install directory:
+
+- Claude: `.claude/skills/zuggie-impl/references/<file>`
+- Codex: `.agents/skills/zuggie-impl/references/<file>`
+- OpenCode: use the equivalent vendor-resolved skill root.
+
+The two reference files are:
+
+- `testing-patterns.md` — passed as `references.testing_patterns_path`
+- `security-checklist.md` — passed as `references.security_checklist_path`
+
 ### Step 1 - Worktree
 
 Check whether the current directory is already inside a clean, non-main
@@ -140,7 +155,9 @@ For each milestone, run an implement-review-triage cycle:
    worktree for a single-milestone plan. Provide the plan, branch,
    worktree path, milestone number/title, and task handle.
 2. Spawn `zuggie-reviewer` with the plan, engineer summary, scoped diff,
-   and worktree path.
+   worktree path, and reference paths:
+   - `references.testing_patterns_path` — resolved per the Reference paths section.
+   - `references.security_checklist_path` — resolved per the Reference paths section.
 3. Triage the review:
    - Re-spawn `zuggie-engineer` when **any** `[blocking]` issue is present,
      regardless of verdict. Pass the blocking issue lines and relevant files.
@@ -175,6 +192,8 @@ Spawn `zuggie-reviewer` with:
 - All engineer summaries
 - `git diff <BASE_BRANCH>...HEAD`
 - Feature worktree path
+- `references.testing_patterns_path` — resolved per the Reference paths section.
+- `references.security_checklist_path` — resolved per the Reference paths section.
 
 Triage final review: re-spawn `zuggie-engineer` when any `[blocking]` line
 is present. Defer `[minor]` issues. Re-review when verdict was
