@@ -14,6 +14,7 @@ Zuggie is a public RAC config pack for structured AI development workflows, with
 - `/zuggie-impl` — Implement from an accepted spec using milestone-based execution in a dedicated worktree.
 - `/zuggie-structured-debug` — Structured debugging workflow (WIP/experimental).
 - Agents: `zuggie-tech-lead`, `zuggie-engineer`, `zuggie-reviewer`, `zuggie-debugger`, `zuggie-explorer`.
+- Roles are tuned across model tiers and reasoning effort: fast explorer passes, higher-reasoning planning/review/debug, and medium-effort implementation.
 
 Planning, implementation, review, and debug are intentionally separated into explicit roles so each stage has clear ownership and outputs.
 
