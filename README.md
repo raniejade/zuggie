@@ -2,7 +2,7 @@
 
 Zuggie is a public RAC config pack for structured AI development workflows, with explicit planning, implementation, review, and debug roles.
 
-![Workflow diagram showing the default Zuggie flow from request to PR-ready branch, with zuggie-explorer feeding discovery into spec and implementation planning](assets/zuggie-workflow.svg)
+![Workflow diagram showing the default Zuggie flow from request to PR-ready branch, with zuggie-explorer feeding discovery into spec and implementation planning](assets/zuggie-workflow.png)
 
 ## Default workflow
 
