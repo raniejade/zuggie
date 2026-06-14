@@ -4,7 +4,7 @@ description = "Planning-only agent for the zuggie-impl workflow."
 instructions = "./zuggie-tech-lead.tpl.md"
 
 [vendor.codex.config]
-model = "gpt-5.3-codex"
+model = "gpt-5.4"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 
