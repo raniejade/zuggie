@@ -1,5 +1,11 @@
 # zuggie
 
+## 0.2.1
+
+### Patch Changes
+
+- 4734b36: Codex agent defaults move from `gpt-5.3-codex` to `gpt-5.4`; zuggie-explorer stays on `gpt-5.4-mini`.
+
 ## 0.2.0
 
 ### Minor Changes
