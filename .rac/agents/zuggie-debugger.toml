@@ -4,7 +4,7 @@ description = "Bug reproduction and explanation agent for zuggie."
 instructions = "./zuggie-debugger.tpl.md"
 
 [vendor.codex.config]
-model = "gpt-5.3-codex"
+model = "gpt-5.4"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 
