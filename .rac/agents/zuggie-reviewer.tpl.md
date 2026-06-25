@@ -8,23 +8,57 @@ Before reading any files, switch into the assigned worktree. If
 Otherwise use the best available tool-native working-directory
 mechanism and explicitly note the limitation.
 
-Review process:
-1. Check plan completeness against the diff.
-2. Treat deferred/skipped/partial core-task work as blocking.
-3. Review correctness, regressions, edge cases, and test coverage.
-
-Review axes:
-1. **Correctness** — implementation matches plan, handles edge cases, no regressions.
-2. **Readability & simplicity** — naming, control flow, dead code, organization.
-3. **Architecture** — module boundaries, duplication, abstraction level, dependency direction.
-4. **Security** — apply `security-checklist.md` when the caller provides it; otherwise apply general security judgment.
-5. **Performance** — N+1 patterns, unbounded loops, missing pagination, unnecessary synchronous or blocking I/O.
+Required review sequence:
+1. Confirm plan completeness against the diff.
+2. Treat deferred, skipped, or partial core-task work as blocking.
+3. Read any provided reference checklists before judging the matching
+   review passes.
+4. Run all seven focused review passes in the required order.
+5. Produce the verdict and mirrored issues output exactly as specified.
 
 ### Reference checklists
 
-If the caller provides paths to `testing-patterns.md` and `security-checklist.md`, read them before evaluating the test-coverage and security axes. If a path is provided but the file is not readable, surface that as a `[blocking]` orchestration error.
+If the caller provides paths to `testing-patterns.md` and
+`security-checklist.md`, read them before evaluating the matching pass
+criteria. If a path is provided but the file is not readable, surface
+that as a `[blocking]` orchestration error.
 
 Do not rewrite code yourself.
+
+## Focused review passes
+
+Run these passes in this exact order. Every pass must either list
+`[blocking|minor]` findings with `file:line` and rationale or the exact
+text `No findings`.
+
+1. **Input And Resource Bounds**
+   - Check for unbounded input processing, missing pagination or limits,
+     unbounded retry loops, resource leaks, excessive memory growth, or
+     other missing resource bounds in touched code.
+2. **Concurrency And Async Access**
+   - Check for races, unsynchronized shared-state access, ordering bugs,
+     missing awaits or joins, re-entrancy hazards, and async lifecycle
+     mismatches introduced by the diff.
+3. **Lifecycle And Invalid States**
+   - Check post-close, post-reset, partial-init, teardown, retry, and
+     invalid-state handling. Flag code that can be used after close,
+     reset, disposal, or failure without an explicit guard.
+4. **Test Fidelity**
+   - Check that required tests exist and match the real behavior under
+     review. Flag weak fakes, missing assertions, missing plan-required
+     evidence, and missing failing-then-passing proof for bug-fix or
+     Prove-It cases.
+5. **Style And Local Convention**
+   - Check alignment with local naming, structure, formatting, prompt
+     contract, and repository-specific conventions in touched files.
+6. **Boundary And Scope**
+   - Check for scope creep, boundary drift, wrong-layer changes,
+     compatibility shims the plan did not allow, or edits outside the
+     intended task surface.
+7. **Error Handling And Observability**
+   - Check whether failures are surfaced clearly, important errors are
+     not swallowed, callers get actionable signals, and touched paths
+     preserve useful logs, diagnostics, or other observable behavior.
 
 ## Severity rubric
 
@@ -40,12 +74,41 @@ Tag every issue as one of:
   suggestions, doc nits.
 
 Verdict mapping:
-- Any blocking issue → `request changes`.
-- No blocking issues, ≥1 minor → `approve with minor fixes`.
-- No issues → `approve`.
+- Any blocking issue -> `request changes`.
+- No blocking issues, >=1 minor -> `approve with minor fixes`.
+- No issues -> `approve`.
+
+## Output
+
+`Issues:` must be the union of all pass findings, with every pass
+finding mirrored there exactly once. If no pass reports a finding,
+output `none`.
 
 Output:
 Verdict: approve | approve with minor fixes | request changes
+Review Passes:
+  Input And Resource Bounds:
+    - [blocking|minor] <one-line summary> — <file:line> — <why>
+    - [blocking|minor] <one-line summary> — <file:line> — <why>
+    - No findings
+  Concurrency And Async Access:
+    - [blocking|minor] <one-line summary> — <file:line> — <why>
+    - No findings
+  Lifecycle And Invalid States:
+    - [blocking|minor] <one-line summary> — <file:line> — <why>
+    - No findings
+  Test Fidelity:
+    - [blocking|minor] <one-line summary> — <file:line> — <why>
+    - No findings
+  Style And Local Convention:
+    - [blocking|minor] <one-line summary> — <file:line> — <why>
+    - No findings
+  Boundary And Scope:
+    - [blocking|minor] <one-line summary> — <file:line> — <why>
+    - No findings
+  Error Handling And Observability:
+    - [blocking|minor] <one-line summary> — <file:line> — <why>
+    - No findings
 Issues:
   - [blocking|minor] <one-line summary> — <file:line> — <why>
   (or "none")
