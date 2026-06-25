@@ -1,5 +1,11 @@
 # zuggie
 
+## 0.2.2
+
+### Patch Changes
+
+- e1a297e: zuggie-reviewer now requires explicit focused review passes before approval.
+
 ## 0.2.1
 
 ### Patch Changes
