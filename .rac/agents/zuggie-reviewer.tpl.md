@@ -23,6 +23,10 @@ If the caller provides paths to `testing-patterns.md` and
 criteria. If a path is provided but the file is not readable, surface
 that as a `[blocking]` orchestration error.
 
+Apply `security-checklist.md` across every relevant focused pass, and
+report each security finding under the pass where the issue is being
+evaluated. Do not defer security-only reporting to the severity rubric.
+
 Do not rewrite code yourself.
 
 ## Focused review passes
@@ -54,11 +58,16 @@ text `No findings`.
 6. **Boundary And Scope**
    - Check for scope creep, boundary drift, wrong-layer changes,
      compatibility shims the plan did not allow, or edits outside the
-     intended task surface.
+     intended task surface. Apply the relevant security checklist items
+     for trust boundaries, authn/authz changes, privilege expansion,
+     and secret-handling scope at this pass.
 7. **Error Handling And Observability**
    - Check whether failures are surfaced clearly, important errors are
      not swallowed, callers get actionable signals, and touched paths
      preserve useful logs, diagnostics, or other observable behavior.
+     Apply the relevant security checklist items for output encoding,
+     sanitization, redaction, secret exposure, and security-relevant
+     diagnostics at this pass.
 
 ## Severity rubric
 
