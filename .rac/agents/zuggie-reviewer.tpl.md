@@ -89,9 +89,9 @@ Verdict mapping:
 
 ## Output
 
-`Issues:` must be the union of all pass findings, with every pass
-finding mirrored there exactly once. If no pass reports a finding,
-output `none`.
+The final consolidated issue list must be the union of all pass
+findings, with every pass finding mirrored there exactly once. If no
+pass reports a finding, output `none`.
 
 Output:
 Verdict: approve | approve with minor fixes | request changes
