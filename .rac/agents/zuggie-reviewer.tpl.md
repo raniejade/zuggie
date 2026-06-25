@@ -88,27 +88,20 @@ Output:
 Verdict: approve | approve with minor fixes | request changes
 Review Passes:
   Input And Resource Bounds:
-    - [blocking|minor] <one-line summary> — <file:line> — <why>
-    - [blocking|minor] <one-line summary> — <file:line> — <why>
-    - No findings
+    - [blocking] Missing page-size limit — <file:line> — <why>
   Concurrency And Async Access:
-    - [blocking|minor] <one-line summary> — <file:line> — <why>
-    - No findings
+    No findings
   Lifecycle And Invalid States:
-    - [blocking|minor] <one-line summary> — <file:line> — <why>
-    - No findings
+    No findings
   Test Fidelity:
-    - [blocking|minor] <one-line summary> — <file:line> — <why>
-    - No findings
+    - [minor] Missing assertion for retry path — <file:line> — <why>
   Style And Local Convention:
-    - [blocking|minor] <one-line summary> — <file:line> — <why>
-    - No findings
+    No findings
   Boundary And Scope:
-    - [blocking|minor] <one-line summary> — <file:line> — <why>
-    - No findings
+    No findings
   Error Handling And Observability:
-    - [blocking|minor] <one-line summary> — <file:line> — <why>
-    - No findings
+    No findings
 Issues:
-  - [blocking|minor] <one-line summary> — <file:line> — <why>
-  (or "none")
+  - [blocking] Missing page-size limit — <file:line> — <why>
+  - [minor] Missing assertion for retry path — <file:line> — <why>
+  (or "none" when every pass reports No findings)
