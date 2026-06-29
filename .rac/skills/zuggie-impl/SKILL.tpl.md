@@ -202,7 +202,20 @@ is present. Defer `[minor]` issues. Re-review when verdict was
 ### Step 7 - Report
 
 Report:
-- Feature summary
+- Status
 - Branch
-- Reviewer verdict
-- Deferred non-blocking issues
+- Implementation Map
+- API / Interface Shape
+- Representative Snippets
+- Seams And Interactions
+- Migration / Compatibility
+- Tests / Verification
+- Risks / Follow-ups
+
+Synthesize the final report from the engineer milestone summaries and
+the final reviewer output. Preserve the reviewer output contract and the
+existing triage behavior.
+
+Include representative snippets when the change materially affects APIs,
+data flow, config, commands, or integrations. Use `None` only when a
+section is genuinely not applicable.
