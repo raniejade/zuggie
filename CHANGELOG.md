@@ -1,5 +1,14 @@
 # zuggie
 
+## 0.2.3
+
+### Patch Changes
+
+- aae2574: Refresh RAC spec and completion report presentation guidance so
+  `zuggie-spec`, `zuggie-engineer`, and `zuggie-impl` produce clearer
+  structured markdown with explicit migration and representative snippet
+  sections.
+
 ## 0.2.2
 
 ### Patch Changes
