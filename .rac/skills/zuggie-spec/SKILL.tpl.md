@@ -84,6 +84,9 @@ Only allow staged compatibility when the user explicitly requests it.
 ## Output format
 
 Final responses must be plain markdown.
+Use richer markdown presentation when it improves clarity, but preserve
+the existing top-level section names and their order. Do not emit XML or
+XML-like wrappers.
 Include these sections exactly, in this order:
 
 - `# Title`
@@ -93,13 +96,21 @@ Include these sections exactly, in this order:
 - `## Non-goals` — what is deliberately out of scope. `None.` is a valid
   value.
 - `## Public API / Interface Changes` — only changes a user or caller
-  observes. `None — internal-only change.` is a valid value.
+  observes. `None — internal-only change.` is a valid value. Use
+  markdown tables for grouped APIs, opcodes, config keys, commands, or
+  schemas when that is clearer than prose. For renames, replacements, or
+  dropped APIs, include an `Old surface | Replacement | Compatibility
+  policy` table and make destructive intent visually explicit.
 - `## Implementation Changes` — concrete edits with file paths. Group
   into suggested milestone-sized chunks; each chunk should touch a
   coherent set of files and be reviewable independently. Note any
-  cross-chunk dependencies.
+  cross-chunk dependencies. Use grouped tables or categorized bullets
+  for long technical lists.
 - `## Tests / Verification` — how to verify the change end-to-end.
 - `## Risks / Tradeoffs` — known-bad outcomes accepted; alternatives
   considered and rejected, with a one-line reason per rejection.
 - `## Assumptions` — claims the spec relies on that were not verified
   during planning.
+
+Use fenced code blocks for concrete syntax, signatures, payloads,
+encodings, or command examples when the exact shape matters.

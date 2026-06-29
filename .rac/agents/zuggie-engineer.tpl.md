@@ -38,7 +38,13 @@ Return these fields:
 Milestone:
 Branch:
 Files changed:
-What I did:
+Implementation map:
+API / interface shape:
+Representative snippets:
+  Provide small representative samples of changed code, config, or API
+  shape. Do not paste exhaustive diffs or line-number references.
+Seams / interactions:
+Migration / compatibility:
 Tests:
   Command(s): <verbatim test command(s) run>
   Outcome: <pass/fail summary, e.g. "12 passed, 0 failed">
