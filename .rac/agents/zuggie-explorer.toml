@@ -4,7 +4,8 @@ description = "Read-only codebase recon agent for the zuggie pipeline."
 instructions = "./zuggie-explorer.tpl.md"
 
 [vendor.codex.config]
-model = "gpt-5.4-mini"
+model = "gpt-5.6-luna"
+model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 
 [vendor.claude.config]
