@@ -1,5 +1,11 @@
 # zuggie
 
+## 0.2.4
+
+### Patch Changes
+
+- 8f896f5: Migrate Codex agent defaults to the GPT-5.6 Sol and Luna model families.
+
 ## 0.2.3
 
 ### Patch Changes
