@@ -4,8 +4,8 @@ description = "Reviewer for zuggie-impl milestone and final diffs."
 instructions = "./zuggie-reviewer.tpl.md"
 
 [vendor.codex.config]
-model = "gpt-5.6-sol"
-model_reasoning_effort = "high"
+model = "gpt-6.1-sol"
+model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 
 [vendor.claude.config]
