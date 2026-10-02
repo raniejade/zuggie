@@ -1,5 +1,11 @@
 # zuggie
 
+## 0.2.5
+
+### Patch Changes
+
+- f1ee89e: Migrate Codex agent defaults to GPT-6.1 Sol with role-specific reasoning effort.
+
 ## 0.2.4
 
 ### Patch Changes
