@@ -1,5 +1,15 @@
 # Testing Patterns
 
+## Applicability and scope
+
+Explicit user scope and applicable repository instructions, including
+nested rules and relevant referenced test admission/validation guidance,
+govern these generic defaults. Read those sources before applying this
+checklist. Do not use it to invent tests or refactors, bypass admission,
+or demand evidence or test structure contrary to repository rules.
+Record source-backed exemptions and alternative required evidence;
+surface conflicts. Report outside-scope discoveries without changing them.
+
 ## Test Pyramid
 
 Tests are grouped into three tiers based on scope, dependencies, and expected duration.
@@ -16,7 +26,8 @@ Prefer small tests. Reach for medium when integration behavior must be verified.
 
 ## Arrange–Act–Assert
 
-Every test function must follow this three-phase layout. No exceptions.
+Where applicable repository conventions do not specify otherwise, use
+this three-phase layout for tests within the task scope.
 
 - **Arrange** — set up all preconditions: inputs, fakes, state, and configuration.
 - **Act** — invoke exactly the one thing under test.
@@ -52,7 +63,9 @@ Both tests construct their own `Invoice` rather than sharing a factory call. A r
 
 ## Prove-It Pattern
 
-Every bug fix must be accompanied by a test that proves the fix works. Follow these four steps in order:
+By default, prove a bug fix with a test using these steps. Applicable
+repository admission prerequisites, source-backed exemptions and
+alternative verification requirements take precedence over this default:
 
 1. Write a failing test that asserts the intended (correct) behavior. The test must target the exact scenario that the bug covers.
 2. Run the test suite and confirm the new test is **RED** before any code change is made.
@@ -65,7 +78,9 @@ Skipping step 2 means the test may never have been capable of catching the bug.
 
 ## Anti-Patterns
 
-- **Flaky tests** — tests that pass and fail non-deterministically erode trust in the suite and must be fixed or deleted immediately.
+- **Flaky tests** — tests that pass and fail non-deterministically erode trust in the suite. Fix or delete only when within the authorized
+  task and permitted by repository rules; report outside-scope cases
+  with their impact and required follow-up.
 - **Snapshot overuse** — storing large serialized snapshots as expected values couples tests to incidental output details and makes legitimate changes painful.
 - **Implementation-coupled assertions** — asserting on internal state, private methods, or call counts to internal collaborators ties tests to the implementation rather than the observable contract.
 - **Excessive mocking** — replacing so many dependencies with fakes that the test no longer exercises any meaningful integration path; the subject under test effectively runs in a vacuum.
@@ -74,7 +89,10 @@ Skipping step 2 means the test may never have been capable of catching the bug.
 
 ## Test Evidence
 
-Every task that adds, modifies, or fixes behavior must include test evidence in its output. Evidence is not optional.
+Every task must report the validation evidence required by applicable
+repository rules and the plan, with source-backed exemptions where allowed.
+Use the fields below for required test evidence; record alternative
+validation/review actions and outcomes when the repository requires them.
 
 The three required fields are:
 

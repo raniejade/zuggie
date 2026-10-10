@@ -15,10 +15,13 @@ claim implementation progress.
 ## Initial spec behavior
 
 1. Before drafting or asking the user anything, inspect:
-   - `CLAUDE.md` files (any scope) and project memory for conventions
-     and constraints.
+   - Applicable ancestor/root and nested `AGENTS.md` and `CLAUDE.md`
+     files covering the task, and relevant guidance they reference.
+     Read applicable sources independently; bound discovery to the task.
+   - Relevant project memory for conventions and constraints.
    - Recent commits and changesets for direction and ongoing work.
-   - The README and any docs the repo points to.
+   - The README and relevant contribution/validation requirements and
+     referenced docs for the task.
    - Files the user's request directly names or that obviously contain
      the surface being changed.
 2. Resolve discoverable facts directly from available artifacts. Do not
@@ -26,6 +29,21 @@ claim implementation progress.
 3. Ask focused questions only when user intent or critical decisions
    remain unresolved after inspection.
 4. Emit a full spec only when the required decisions are complete.
+
+## Repository requirements
+
+Explicit user scope and applicable repository rules govern generic
+checklists. Do not invent tests, refactors, compatibility, or remediation
+beyond the task. Surface conflicts with their sources before finalizing.
+
+Identify each applicable gate's source, applicability, timing and
+prerequisites, owner, exact command or review action, required evidence,
+and repository blocking criteria. Put implementation-stage gates under
+Implementation Changes and validation/review gates under Tests /
+Verification, retaining the existing output headings. Check gates due
+before spec completion; mark later gates not yet due and unverified
+assumptions explicitly. Honor repository test admission and exemptions
+rather than prescribing generic additional tests.
 
 ## Revision spec behavior
 

@@ -8,8 +8,37 @@ Before reading any files, switch into the assigned worktree. If
 Otherwise use the best available tool-native working-directory
 mechanism and explicitly note the limitation.
 
+## Repository context and gates
+
+Independently read applicable ancestor/root and nested `AGENTS.md` and
+`CLAUDE.md` files for the diff, relevant referenced guidance, the README,
+and contribution/validation rules before judging it. Bound discovery to
+the reviewed scope. Caller-provided inventories do not replace sources.
+
+Explicit user scope and applicable repository rules govern generic
+checklists and severity defaults. Do not demand extra tests, refactors,
+compatibility layers, or remediation beyond that scope. Surface conflicts
+with sources; report outside-scope discoveries without directing silent
+fixes. Use repository blocking criteria for applicable requirements.
+
+Check the plan's gate inventory against those sources for completeness:
+source, applicability, timing/prerequisites, owner, command/review action,
+required evidence, and blocking criteria. Verify the supplied evidence
+matches the reviewed diff/revision where required. Check whether any stage
+advanced before its required gate passed; distinguish future gates from
+passed gates and verify exemptions against their sources.
+
+Map violations into the existing passes: test admission, validation and
+test evidence into Test Fidelity; local instruction compliance into Style
+And Local Convention; scope, ownership and approval requirements into
+Boundary And Scope; other violations into the pass matching their subject.
+Cite the source and missing action/evidence in each finding, classify by
+applicable repository blocking criteria, and mirror every finding in
+Issues. Gate success or non-applicability uses the existing `No findings`
+format; do not add an eighth pass or a separate verdict format.
+
 Required review sequence:
-1. Confirm plan completeness against the diff.
+1. Confirm plan and gate completeness against repository sources and the diff.
 2. Treat deferred, skipped, or partial core-task work as blocking.
 3. Read any provided reference checklists before judging the matching
    review passes.
@@ -48,10 +77,11 @@ text `No findings`.
      invalid-state handling. Flag code that can be used after close,
      reset, disposal, or failure without an explicit guard.
 4. **Test Fidelity**
-   - Check that required tests exist and match the real behavior under
-     review. Flag weak fakes, missing assertions, missing plan-required
-     evidence, and missing failing-then-passing proof for bug-fix or
-     Prove-It cases.
+   - Check repository test admission, required validation/review evidence,
+     and permitted exemptions. Check that required tests match the real
+     behavior. Flag weak fakes, missing assertions, missing required
+     evidence, and missing failing-then-passing proof where required by
+     applicable repository rules, the plan, or applicable TDD defaults.
 5. **Style And Local Convention**
    - Check alignment with local naming, structure, formatting, prompt
      contract, and repository-specific conventions in touched files.
@@ -71,14 +101,18 @@ text `No findings`.
 
 ## Severity rubric
 
+Apply repository-defined blocking criteria first; the following defaults
+apply where applicable rules do not specify otherwise.
+
 Tag every issue as one of:
 
 - **blocking** — core task missing, correctness bug, regression in the
   scoped diff, data loss, missing test for new behavior the plan
   explicitly required, missing or unverified test evidence for new
-  behavior or a bug fix (no failing-then-passing test for Prove-It
-  cases), or a security regression on a touched trust boundary as
-  defined in `security-checklist.md`.
+  behavior or a bug fix where required by repository rules, the plan, or
+  applicable TDD defaults (no failing-then-passing test for required
+  Prove-It cases), or a security regression on a touched trust boundary
+  as defined in `security-checklist.md`.
 - **minor** — readability, naming, non-required test coverage, refactor
   suggestions, doc nits.
 

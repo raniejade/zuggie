@@ -2,6 +2,14 @@
 
 Use this checklist when implementing or reviewing any change that touches data ingestion, authentication, authorization, external dependencies, or user-facing output.
 
+Explicit user scope and applicable repository instructions, including
+nested rules and relevant referenced security guidance, govern this
+generic checklist. Apply relevant items to the touched surface; do not
+expand the task with unrelated remediation. Surface conflicts with their
+sources. Report outside-scope discoveries and required follow-up without
+silently changing code, rotating credentials, or altering external systems.
+Use repository blocking criteria when classifying findings.
+
 ---
 
 ## 1. Input Validation at Trust Boundaries
@@ -17,7 +25,10 @@ A **trust boundary** is any point where data enters the process from outside —
 ## 2. Secret and Credential Handling
 
 - **Never log secrets.** Redact or omit credentials, tokens, passwords, and keys from all log output, error messages, and stack traces.
-- **Never embed secrets in source code.** Hard-coded credentials must be removed immediately and the secret rotated.
+- **Never embed secrets in source code.** Report hard-coded credentials without reproducing their values. Remove
+  them or rotate secrets only within explicitly authorized scope and
+  applicable repository procedures; otherwise report required remediation
+  and its owner without silently acting.
 - **Prefer env vars or a secret store.** Pass secrets through environment variables at runtime or retrieve them from a dedicated secret management service (e.g., Vault, AWS Secrets Manager). Do not commit `.env` files containing real secrets.
 
 ---

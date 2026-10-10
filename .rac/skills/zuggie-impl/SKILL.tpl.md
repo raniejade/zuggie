@@ -44,6 +44,23 @@ agents in parallel when the questions are independent.
   indicates the core ask was skipped, deferred, or only partially done,
   treat it as blocking and re-spawn the engineer.
 
+## Repository requirements
+
+Explicit user scope and applicable repository instructions govern generic
+checklists. Discover applicable ancestor/root and nested `AGENTS.md` and
+`CLAUDE.md`, relevant referenced guidance, README, contribution and
+validation rules for the task. Keep discovery bounded to the task surface.
+Do not invent extra tests, refactors, compatibility, or remediation.
+Surface conflicts with their sources instead of silently overriding them.
+
+Track each gate's source, applicability, timing/prerequisites, owner,
+command or review action, required evidence, and repository blocking
+criteria. Before advancing a stage, check all gates due at that point.
+Do not advance past a due gate that blocks under repository criteria;
+obtain missing evidence through the responsible agent or report the
+blocker. Future gates remain not yet due. An exemption needs a source and
+reason; do not count a command as proof of behavior it cannot verify.
+
 ## Debugging
 
 When you need structured bug investigation during the pipeline, invoke
@@ -111,8 +128,11 @@ Enter the feature worktree using the worktree tooling rule above.
 
 Gather lightweight codebase context before planning. Spawn focused
 `zuggie-explorer` agents for questions such as related files, existing
-patterns, or unclear APIs. Pass the synthesized findings to the
-tech-lead; do not dump raw explorer output.
+patterns, or unclear APIs. Include task-bounded discovery of applicable
+instruction files, relevant linked guidance, README, contribution and
+validation requirements, including nested scopes. Pass source paths and
+synthesized requirements/findings to the tech-lead; do not dump raw
+explorer output. Check gates due before planning.
 
 ### Step 2 - Plan
 
@@ -120,10 +140,15 @@ Spawn `zuggie-tech-lead` with:
 - Task handle
 - Feature branch and worktree path
 - Exploration findings
+- Discovered repository sources, requirements, gate timing and evidence
 - Any existing authoritative plan or specific approach from the caller
 
 Wait for the plan. Verify it includes at least one milestone with file
-lists and steps. If the plan contains milestones whose titles begin with
+lists and steps, plus the gate inventory under its existing headings.
+Check inventory completeness, timing/prerequisites, owners, required
+evidence and blocking criteria against discovered requirements. Resolve
+conflicts and satisfy gates due before implementation. If the plan
+contains milestones whose titles begin with
 `[explore]`, dispatch each `[explore]` milestone to `zuggie-explorer`
 (not `zuggie-engineer`). Collect the text findings. Then re-invoke
 `zuggie-tech-lead` with the original plan as authoritative input plus
@@ -153,12 +178,17 @@ For each milestone, run an implement-review-triage cycle:
 
 1. Spawn `zuggie-engineer` in the milestone worktree, or the feature
    worktree for a single-milestone plan. Provide the plan, branch,
-   worktree path, milestone number/title, and task handle.
+   worktree path, milestone number/title, task handle, repository source
+   paths, applicable gate inventory and existing evidence. Require the
+   engineer to read sources independently and satisfy gates when due.
+   Check the summary for evidence, source-backed exemptions and remaining
+   gates before advancing to review; route due missing work to its owner.
 2. Spawn `zuggie-reviewer` with the plan, engineer summary, scoped diff,
-   worktree path, and reference paths:
+   worktree path, repository source paths, gate inventory, evidence,
+   exemptions and outstanding/not-yet-due gates, and reference paths:
    - `references.testing_patterns_path` — resolved per the Reference paths section.
    - `references.security_checklist_path` — resolved per the Reference paths section.
-3. Triage the review:
+3. Check due gates and triage the review:
    - Re-spawn `zuggie-engineer` when **any** `[blocking]` issue is present,
      regardless of verdict. Pass the blocking issue lines and relevant files.
    - Defer all `[minor]` issues unless the fix is trivial.
@@ -187,9 +217,16 @@ branches.
 
 ### Step 6 - Final unified review
 
+Check gates due before final review, including any requirements that
+apply to the combined diff. Obtain missing evidence from the responsible
+agent before advancing where repository criteria require it.
+
 Spawn `zuggie-reviewer` with:
 - Plan
 - All engineer summaries
+- Repository source paths and complete gate inventory
+- Evidence and exemptions for the combined diff/revision, plus outstanding
+  and not-yet-due gates
 - `git diff <BASE_BRANCH>...HEAD`
 - Feature worktree path
 - `references.testing_patterns_path` — resolved per the Reference paths section.
@@ -200,6 +237,12 @@ is present. Defer `[minor]` issues. Re-review when verdict was
 `request changes`. Fallback to verdict-only triage if tags are absent.
 
 ### Step 7 - Report
+
+Check gates due before reporting completion. Include source-backed gate
+status, exact actions/commands and outcomes, review evidence, exemptions,
+and outstanding or not-yet-due requirements under the existing Status,
+Tests / Verification, and Risks / Follow-ups sections. Do not claim a
+blocked stage or a future commit/push gate has passed.
 
 Report:
 - Status
