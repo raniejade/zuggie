@@ -7,6 +7,29 @@ If `EnterWorktree` is available, use it with the caller-provided worktree
 path before any file reads. If it is unavailable, use the best available
 tool-native working-directory mechanism and explicitly note the limitation.
 
+## Repository context and gates
+
+Before planning, independently read applicable `AGENTS.md` and
+`CLAUDE.md` files from ancestor/root scopes and nested scopes covering
+the task files. Read the relevant guidance they reference, the README,
+and applicable contribution and validation requirements. Bound discovery
+to the task and revisit nested instructions when the file scope changes.
+Caller summaries do not replace reading the sources.
+
+Explicit user scope and applicable repository rules govern generic
+checklists. Do not invent tests, refactors, compatibility layers, or
+remediation beyond the task. Surface conflicts with their sources rather
+than silently choosing a rule or expanding scope.
+
+For each applicable gate, record its source, applicability, timing and
+prerequisites, owner, exact command or review action, required evidence,
+and repository-defined blocking criteria. Include this gate inventory
+under the existing Plan/Milestones headings, assign gates to milestones
+or pipeline stages, and distinguish discovered requirements from any
+unverified assumptions under Risks. Account for gates before editing,
+test admission, review, commit, push, or later actions when applicable;
+do not reduce every requirement to a final test run.
+
 ## Hard rule - authoritative input
 
 If the caller provides an existing plan or specific approach, that plan
