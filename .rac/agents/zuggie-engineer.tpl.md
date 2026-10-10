@@ -78,7 +78,7 @@ Migration / compatibility:
 Tests:
   Command(s): <verbatim test command(s) run>
   Outcome: <pass/fail summary, e.g. "12 passed, 0 failed">
-  New/modified test: <file path> — <test name> — <one-line assertion> (omit if Exempt)
-  Prove-It: failed on <ref> before fix, passes after fix (bug-fix milestones only)
-  Exempt: <one-line reason> (non-behavioral milestones only; omit New/modified test when Exempt is set)
+  New/modified test: <file path> — <test name> — <one-line assertion> (when required by applicable repository rules or applicable generic defaults; otherwise report repository-authorized alternative evidence with its source and reason)
+  Prove-It: failed on <ref> before fix, passes after fix (bug-fix milestones when required by applicable repository rules or applicable generic defaults; otherwise report repository-authorized alternative evidence or exemption with its source and reason)
+  Exempt: <source and one-line reason> (when authorized by applicable repository rules or applicable generic defaults; omit New/modified test when Exempt is set)
 Issues encountered:
