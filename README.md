@@ -1,8 +1,8 @@
 # Zuggie
 
-Zuggie is a public RAC config pack for structured AI development workflows, with explicit planning, implementation, review, and debug roles.
+Zuggie is a public RAC skill pack for structured AI development workflows, with explicit planning, implementation, review, and debug roles.
 
-![Workflow diagram showing the default Zuggie flow from request to PR-ready branch, with zuggie-explorer feeding discovery into spec and implementation planning](assets/zuggie-workflow.png)
+![Workflow diagram showing the default Zuggie flow from request to PR-ready branch, with explorer subagents feeding discovery into spec and implementation planning](assets/zuggie-workflow.png)
 
 ## Default workflow
 
@@ -13,8 +13,8 @@ Zuggie is a public RAC config pack for structured AI development workflows, with
 - `/zuggie-spec` — Build a decision-ready implementation spec for a change.
 - `/zuggie-impl` — Implement from an accepted spec using milestone-based execution in a dedicated worktree.
 - `/zuggie-structured-debug` — Structured debugging workflow (WIP/experimental).
-- Agents: `zuggie-tech-lead`, `zuggie-engineer`, `zuggie-reviewer`, `zuggie-debugger`, `zuggie-explorer`.
-- Roles are tuned across model tiers and reasoning effort: fast explorer passes, higher-reasoning planning/review/debug, and medium-effort implementation.
+- Skill-local prompts for explorer, tech-lead, engineer, reviewer, and debugger roles.
+- Skills spawn general subagents with the full role instructions and task context. The harness chooses models and reasoning settings.
 
 Planning, implementation, review, and debug are intentionally separated into explicit roles so each stage has clear ownership and outputs.
 
@@ -27,18 +27,20 @@ Planning, implementation, review, and debug are intentionally separated into exp
 
 ```bash
 rac pack add zuggie github:raniejade/zuggie --ref <ref>
-rac install --target claude,codex --kind agent,skill
+rac install --targets claude,codex --kind skill
 ```
 
 Use ``--ref v<X.Y.Z>`` for a stable release (e.g. ``--ref v0.2.0``). See [Releases](https://github.com/raniejade/zuggie/releases) for available tags.
 
 ## Generated output locations
 
-`rac install --target claude,codex --kind agent,skill` generates into standard vendor locations in the target project:
+`rac install --targets claude,codex --kind skill` generates into standard vendor locations in the target project:
 
-- Claude agents/skills under `.claude/`
-- Codex agents under `.codex/agents/`
+- Claude skills under `.claude/skills/`
 - Codex skills under `.agents/skills/`
+
+Role prompts and review checklists are bundled in the installed skills’
+`references/` directories. Zuggie does not register custom agent types.
 
 ## Usage
 
@@ -56,8 +58,8 @@ WIP/experimental debug path:
 ## Validation
 
 ```bash
-npx -y github:raniejade/rac#v0.3.0 doctor --target claude,codex --kind agent,skill
-npx -y github:raniejade/rac#v0.3.0 install --target claude,codex --kind agent,skill --dry-run
+npx -y github:raniejade/rac#v0.3.0 doctor --targets claude,codex --kind skill
+npx -y github:raniejade/rac#v0.3.0 install --targets claude,codex --kind skill --dry-run
 ```
 
 CI runs these same checks on every PR and push to main.
@@ -70,9 +72,8 @@ Include one for every PR that has a user-visible effect; omit it for pure docs o
 ## Source of truth
 
 - `.rac/config.toml`
-- `.rac/agents/*.toml`
-- `.rac/agents/*.tpl.md`
 - `.rac/skills/*/SKILL.tpl.md`
+- `.rac/skills/*/references/*.md`
 
 ## License
 

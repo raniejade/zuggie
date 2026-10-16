@@ -1,5 +1,5 @@
 +++
-description = "Structured debugging workflow using zuggie's dedicated debugger and reviewer subagents."
+description = "Structured debugging workflow using skill-local debugger and reviewer prompts."
 [vendor.claude.frontmatter]
 version = "1.0.0"
 +++
@@ -21,13 +21,32 @@ Every step below that says "spawn" means: invoke the appropriate
 sub-agent and wait for its real output. Do not simulate the agent's
 work.
 
-Spawn `zuggie-explorer` agents for all codebase recon.
+Spawn explorer subagents for all codebase recon.
 
-## Required subagents
+## Subagent spawning contract
 
-- `zuggie-explorer`
-- `zuggie-debugger`
-- `zuggie-reviewer`
+Use the harness's general subagent spawning tool. These are prompt roles,
+not registered agent types. Leave model and reasoning selection to the
+harness; do not set either in spawn arguments.
+
+Resolve paths from the installed skills, never from the current worktree
+or hardcoded vendor roots. Locate this skill and `zuggie-impl` through the
+harness-provided skill locations:
+
+- Debugger: this skill's `references/debugger-prompt.md`
+- Explorer: `zuggie-impl`'s `references/explorer-prompt.md`
+- Reviewer: `zuggie-impl`'s `references/reviewer-prompt.md`
+- Testing checklist: `zuggie-impl`'s `references/testing-patterns.md`
+
+At every invocation, including retries and re-reviews, read the selected
+role file and supply its full content in the subagent instructions together
+with the contextual assignment listed in that step. Include the assigned
+worktree, branch, bounded scope, ownership, and required inputs. A role
+name or a path alone is not sufficient. Actually spawn a separate
+subagent and wait for its output; never perform or simulate a role inline.
+Keep reproduction review independent by spawning a separate reviewer
+subagent. If spawning or a required installed reference is unavailable,
+report the blocker instead of substituting inline work.
 
 ## Hard rules
 
@@ -78,7 +97,9 @@ Enter the debug worktree using the worktree tooling rule above.
 
 ### Step 2 - Observations
 
-Gather observed facts only, with no theories. Write an Observation Brief
+Spawn focused explorer subagents with the bug description, worktree
+path, debug branch, and bounded recon questions. Gather observed facts
+only, with no theories. Write an Observation Brief
 to `.zuggie/<DEBUG_BRANCH>-observations.md` with exactly these sections:
 
 ```markdown
@@ -96,7 +117,7 @@ subsequent steps. Do not inline the full brief into later prompts.
 
 ### Step 3-5 - Debugger
 
-Spawn `zuggie-debugger` with:
+Spawn a debugger subagent with:
 - Observation Brief path
 - Worktree path
 - Debug branch
@@ -119,13 +140,16 @@ debugger with that feedback.
 
 ### Step 6 - Review reproduction
 
-Spawn `zuggie-reviewer` with:
+Spawn a reviewer subagent with:
 - A note that this is a reproduction review
 - Observation Brief path
 - Debugger reproduction summary
 - `git diff <BASE_BRANCH>...HEAD`
 - Worktree path
-- `testing_patterns_path` — resolved as `.claude/skills/zuggie-impl/references/testing-patterns.md` on Claude, or the equivalent vendor-resolved path. Do not pass `security_checklist_path`; reproduction reviews are excluded from security-axis judgment.
+- `testing_patterns_path` — resolve the testing checklist using the
+  installed skill location from the spawning contract above. Do not pass
+  `security_checklist_path`; reproduction reviews are excluded from
+  security-axis judgment. Include that exclusion in the reviewer assignment.
 - Evaluation criteria:
   - Observation Brief is factual
   - Hypothesis ledger has real alternatives
@@ -133,7 +157,7 @@ Spawn `zuggie-reviewer` with:
   - Mechanism statement is causal
 
 Triage review:
-- Re-spawn `zuggie-debugger` when any `[blocking]` line is present. Pass
+- Re-spawn debugger when any `[blocking]` line is present. Pass
   the blocking issue lines, original Observation Brief path, and worktree
   details.
 - Defer `[minor]` issues unless trivial.
