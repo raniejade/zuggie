@@ -14,8 +14,8 @@ jobs:
         with:
           node-version: '20'
       # rac CLI pinned to a tagged release; bump intentionally.
-      - run: npx -y github:raniejade/rac#v0.3.0 doctor --target claude,codex --kind agent,skill
-      - run: npx -y github:raniejade/rac#v0.3.0 install --target claude,codex --kind agent,skill --dry-run
+      - run: npx -y github:raniejade/rac#v0.3.0 doctor --targets claude,codex --kind skill
+      - run: npx -y github:raniejade/rac#v0.3.0 install --targets claude,codex --kind skill --dry-run
 
   changeset-gate:
     if: github.event_name == 'pull_request'

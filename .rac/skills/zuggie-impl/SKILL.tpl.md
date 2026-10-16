@@ -21,25 +21,41 @@ sub-agent and wait for its real output. Do not simulate the agent's work
 or summarize what you think it would produce.
 
 When you need to understand the codebase before planning or during
-triage, spawn `zuggie-explorer` agents rather than reading the full surface
-yourself. Keep exploration prompts focused and run multiple `zuggie-explorer`
+triage, spawn explorer subagents rather than reading the full surface
+yourself. Keep exploration prompts focused and run multiple explorer
 agents in parallel when the questions are independent.
 
-## Required subagents
+## Subagent spawning contract
 
-- `zuggie-explorer`
-- `zuggie-tech-lead`
-- `zuggie-engineer`
-- `zuggie-reviewer`
+Use the harness's general subagent spawning tool for each role below.
+These are prompt roles, not registered agent types. Leave model and
+reasoning selection to the harness; do not set either in spawn arguments.
+
+Resolve each file relative to this installed skill's own directory:
+
+- Explorer: `references/explorer-prompt.md`
+- Tech-lead: `references/tech-lead-prompt.md`
+- Engineer: `references/engineer-prompt.md`
+- Reviewer: `references/reviewer-prompt.md`
+
+At every invocation, including retries, fixes, conflict resolution, and
+re-reviews, read the selected role file and supply its full content in
+the subagent instructions together with the contextual assignment listed
+in that step. A role name or a path alone is not sufficient. Include the
+assigned worktree, branch, bounded scope, ownership, and required inputs.
+Actually spawn a separate subagent and wait for its output; never perform
+or simulate a role inline. Keep review independent of implementation by
+spawning a separate reviewer subagent. If general subagent spawning is
+unavailable, report the blocker instead of substituting inline work.
 
 ## Hard rules
 
 - NEVER merge anything into main or master. All work happens on
   feature branches. The user merges to main themselves.
-- NEVER skip the Plan step. You MUST spawn `zuggie-tech-lead` even
+- NEVER skip the Plan step. You MUST spawn a tech-lead subagent even
   if you think you already understand the task.
 - NEVER write or edit code yourself. All code changes go through
-  `zuggie-engineer`.
+  an engineer subagent.
 - NEVER accept a deferral of the main task. If an engineer's summary
   indicates the core ask was skipped, deferred, or only partially done,
   treat it as blocking and re-spawn the engineer.
@@ -96,13 +112,10 @@ worktree switch happened.
 
 ## Reference paths
 
-The orchestrator passes reference checklist paths to `zuggie-reviewer`
-at every review spawn. Resolve these paths relative to this skill's own
-install directory:
-
-- Claude: `.claude/skills/zuggie-impl/references/<file>`
-- Codex: `.agents/skills/zuggie-impl/references/<file>`
-- OpenCode: use the equivalent vendor-resolved skill root.
+The orchestrator passes reference checklist paths to the reviewer
+at every review spawn. Resolve these paths relative to this installed
+skill's own directory, never the current worktree or a hardcoded vendor
+root. Use the harness-provided skill location to find this directory.
 
 The two reference files are:
 
@@ -127,7 +140,7 @@ Enter the feature worktree using the worktree tooling rule above.
 ### Step 1a - Pre-planning recon
 
 Gather lightweight codebase context before planning. Spawn focused
-`zuggie-explorer` agents for questions such as related files, existing
+explorer subagents for questions such as related files, existing
 patterns, or unclear APIs. Include task-bounded discovery of applicable
 instruction files, relevant linked guidance, README, contribution and
 validation requirements, including nested scopes. Pass source paths and
@@ -136,7 +149,7 @@ explorer output. Check gates due before planning.
 
 ### Step 2 - Plan
 
-Spawn `zuggie-tech-lead` with:
+Spawn a tech-lead subagent with:
 - Task handle
 - Feature branch and worktree path
 - Exploration findings
@@ -149,9 +162,9 @@ Check inventory completeness, timing/prerequisites, owners, required
 evidence and blocking criteria against discovered requirements. Resolve
 conflicts and satisfy gates due before implementation. If the plan
 contains milestones whose titles begin with
-`[explore]`, dispatch each `[explore]` milestone to `zuggie-explorer`
-(not `zuggie-engineer`). Collect the text findings. Then re-invoke
-`zuggie-tech-lead` with the original plan as authoritative input plus
+`[explore]`, dispatch each `[explore]` milestone to explorer
+(not engineer). Collect the text findings. Then re-invoke
+tech-lead with the original plan as authoritative input plus
 the new exploration findings. Do not proceed to Step 3 until all
 `[explore]` milestones are resolved.
 
@@ -176,20 +189,20 @@ worktree directly.
 
 For each milestone, run an implement-review-triage cycle:
 
-1. Spawn `zuggie-engineer` in the milestone worktree, or the feature
+1. Spawn an engineer subagent in the milestone worktree, or the feature
    worktree for a single-milestone plan. Provide the plan, branch,
    worktree path, milestone number/title, task handle, repository source
    paths, applicable gate inventory and existing evidence. Require the
    engineer to read sources independently and satisfy gates when due.
    Check the summary for evidence, source-backed exemptions and remaining
    gates before advancing to review; route due missing work to its owner.
-2. Spawn `zuggie-reviewer` with the plan, engineer summary, scoped diff,
+2. Spawn reviewer with the plan, engineer summary, scoped diff,
    worktree path, repository source paths, gate inventory, evidence,
    exemptions and outstanding/not-yet-due gates, and reference paths:
    - `references.testing_patterns_path` — resolved per the Reference paths section.
    - `references.security_checklist_path` — resolved per the Reference paths section.
 3. Check due gates and triage the review:
-   - Re-spawn `zuggie-engineer` when **any** `[blocking]` issue is present,
+   - Re-spawn engineer when **any** `[blocking]` issue is present,
      regardless of verdict. Pass the blocking issue lines and relevant files.
    - Defer all `[minor]` issues unless the fix is trivial.
    - Re-review when the verdict was `request changes`.
@@ -208,7 +221,7 @@ milestone branch into `FEATURE_BRANCH`, never main or master:
 
     git merge <FEATURE_BRANCH>-ms-<N> --no-edit
 
-If conflicts occur, abort the merge and spawn `zuggie-engineer` in the
+If conflicts occur, abort the merge and spawn an engineer subagent in the
 feature worktree with the milestone diff, conflicting file list, and
 milestone description.
 
@@ -221,7 +234,7 @@ Check gates due before final review, including any requirements that
 apply to the combined diff. Obtain missing evidence from the responsible
 agent before advancing where repository criteria require it.
 
-Spawn `zuggie-reviewer` with:
+Spawn a reviewer subagent with:
 - Plan
 - All engineer summaries
 - Repository source paths and complete gate inventory
@@ -232,7 +245,7 @@ Spawn `zuggie-reviewer` with:
 - `references.testing_patterns_path` — resolved per the Reference paths section.
 - `references.security_checklist_path` — resolved per the Reference paths section.
 
-Triage final review: re-spawn `zuggie-engineer` when any `[blocking]` line
+Triage final review: re-spawn engineer when any `[blocking]` line
 is present. Defer `[minor]` issues. Re-review when verdict was
 `request changes`. Fallback to verdict-only triage if tags are absent.
 
